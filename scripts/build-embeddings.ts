@@ -21,6 +21,8 @@ type Doc = {
   keywords?: string[];
   type?: string;
   parentDocument?: string;
+  sourceId?: string;
+  relFile?: string;
 };
 
 type LibraryBundle = {
@@ -100,13 +102,15 @@ async function main() {
     CREATE TABLE embeddings (
       doc_id TEXT NOT NULL PRIMARY KEY,
       parent_doc_id TEXT,
+      source_id TEXT,
+      rel_file TEXT,
       vec BLOB NOT NULL
     )
   `);
 
   const sizeBefore = fs.statSync(DST).size;
 
-  const ins = db.prepare(`INSERT OR REPLACE INTO embeddings (doc_id, parent_doc_id, vec) VALUES (?, ?, ?)`);
+  const ins = db.prepare(`INSERT OR REPLACE INTO embeddings (doc_id, parent_doc_id, source_id, rel_file, vec) VALUES (?, ?, ?, ?, ?)`);
 
   const startTime = Date.now();
   let inserted = 0;
@@ -125,7 +129,7 @@ async function main() {
       // We pass pre-computed vecs via closure
       const vec = batchVecs[i];
       if (!vec) return;
-      ins.run(doc.id, doc.parentDocument || null, vec);
+      ins.run(doc.id, doc.parentDocument || null, doc.sourceId || null, doc.relFile || null, vec);
       inserted++;
     }
   });

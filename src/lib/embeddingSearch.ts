@@ -139,14 +139,14 @@ export async function buildSemanticResults(
   // Fetch ALL embeddings (canonical: semantic leg is independent)
   // Parent-document pattern: sections map to parent_doc_id for dedup
   const rows = db
-    .prepare(`SELECT doc_id, parent_doc_id, vec FROM embeddings`)
-    .all() as { doc_id: string; parent_doc_id: string | null; vec: Buffer }[];
+    .prepare(`SELECT doc_id, parent_doc_id, source_id, rel_file, vec FROM embeddings`)
+    .all() as { doc_id: string; parent_doc_id: string | null; source_id: string | null; rel_file: string | null; vec: Buffer }[];
 
   if (rows.length === 0) return [];
 
   // Score each embedding and track best hit per parent doc
   const docMap = new Map(bm25Results.map((r) => [r.id, r]));
-  const bestScorePerParent = new Map<string, { score: number; docId: string }>();
+  const bestScorePerParent = new Map<string, { score: number; docId: string; sourceId: string | null; relFile: string | null }>();
 
   for (const row of rows) {
     const docVec = new Float32Array(
@@ -162,25 +162,30 @@ export async function buildSemanticResults(
     // Deduplicate: keep best-scoring embedding per parent doc
     const existing = bestScorePerParent.get(effectiveDocId);
     if (!existing || score > existing.score) {
-      bestScorePerParent.set(effectiveDocId, { score, docId: row.doc_id });
+      bestScorePerParent.set(effectiveDocId, {
+        score,
+        docId: row.doc_id,
+        sourceId: row.source_id,
+        relFile: row.rel_file,
+      });
     }
   }
 
   // Build results: remap to parent doc, create synthetic SearchResult if needed for RRF
   const scored: { result: SearchResult; score: number }[] = [];
-  for (const [parentDocId, { score }] of bestScorePerParent.entries()) {
+  for (const [parentDocId, { score, sourceId, relFile }] of bestScorePerParent.entries()) {
     let original = docMap.get(parentDocId);
 
     // If parent doc not in BM25 results, create synthetic result for RRF
-    // (semantic leg should contribute independently, RRF will deduplicate downstream)
+    // Use actual metadata from the embedding entry
     if (!original) {
       original = {
         id: parentDocId,
         text: "",
         bm25: 0,
-        sourceId: "",
-        path: "",
-        relFile: "",
+        sourceId: sourceId || "",
+        path: relFile || "",
+        relFile: relFile || "",
         finalScore: 0,
         sourceKind: "offline" as const,
       };
@@ -194,7 +199,7 @@ export async function buildSemanticResults(
 
   // Build SearchResult[] with semantic sourceKind and RRF scoring
   const semanticWeight = CONFIG.EMBEDDING_WEIGHT;
-  return scored.slice(0, k).map(({ result, score }, idx) => ({
+  const semanticResults = scored.slice(0, k).map(({ result, score }, idx) => ({
     ...result,
     sourceKind: "semantic" as const,
     finalScore: rrf(idx + 1) * semanticWeight,
@@ -205,4 +210,11 @@ export async function buildSemanticResults(
       boost: score, // cosine similarity as debug info
     },
   }));
+
+  console.log(`🧠 [SEMANTIC] Found ${scored.length} unique docs, returning top ${semanticResults.length}`);
+  if (semanticResults.length > 0) {
+    console.log(`   Top 3: ${semanticResults.slice(0, 3).map(r => r.id).join(', ')}`);
+  }
+
+  return semanticResults;
 }
