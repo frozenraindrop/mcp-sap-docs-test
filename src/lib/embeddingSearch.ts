@@ -127,15 +127,6 @@ export async function buildSemanticResults(
 
   const db = openDb();
 
-  // Fetch stored embeddings for BM25 candidates (includes sections via parent_doc_id)
-  const ids = bm25Results.map((r) => r.id);
-  const placeholders = ids.map(() => "?").join(",");
-  const rows = db
-    .prepare(`SELECT doc_id, parent_doc_id, vec FROM embeddings WHERE doc_id IN (${placeholders})`)
-    .all(...ids) as { doc_id: string; parent_doc_id: string | null; vec: Buffer }[];
-
-  if (rows.length === 0) return [];
-
   // Embed query (ensures model is loaded)
   let queryVec: Float32Array;
   try {
@@ -145,10 +136,17 @@ export async function buildSemanticResults(
     return [];
   }
 
-  // Score each candidate and remap section hits to parent docs
-  const scored: { result: SearchResult; score: number }[] = [];
+  // Fetch ALL embeddings (canonical: semantic leg is independent)
+  // Parent-document pattern: sections map to parent_doc_id for dedup
+  const rows = db
+    .prepare(`SELECT doc_id, parent_doc_id, vec FROM embeddings`)
+    .all() as { doc_id: string; parent_doc_id: string | null; vec: Buffer }[];
+
+  if (rows.length === 0) return [];
+
+  // Score each embedding and track best hit per parent doc
   const docMap = new Map(bm25Results.map((r) => [r.id, r]));
-  const bestScorePerParent = new Map<string, number>();
+  const bestScorePerParent = new Map<string, { score: number; docId: string }>();
 
   for (const row of rows) {
     const docVec = new Float32Array(
@@ -158,22 +156,37 @@ export async function buildSemanticResults(
     );
     const score = cosineSimilarity(queryVec, docVec);
 
-    // Determine the effective doc ID: parent if section, otherwise self
+    // Parent-document remap: sections → parent doc
     const effectiveDocId = row.parent_doc_id || row.doc_id;
 
-    // Track best score per effective doc (deduplicate sections to their parent)
+    // Deduplicate: keep best-scoring embedding per parent doc
     const existing = bestScorePerParent.get(effectiveDocId);
-    if (!existing || score > existing) {
-      bestScorePerParent.set(effectiveDocId, score);
+    if (!existing || score > existing.score) {
+      bestScorePerParent.set(effectiveDocId, { score, docId: row.doc_id });
     }
   }
 
-  // Build results from best scores per doc
-  for (const [docId, score] of bestScorePerParent.entries()) {
-    const original = docMap.get(docId);
-    if (original) {
-      scored.push({ result: original, score });
+  // Build results: remap to parent doc, create synthetic SearchResult if needed for RRF
+  const scored: { result: SearchResult; score: number }[] = [];
+  for (const [parentDocId, { score }] of bestScorePerParent.entries()) {
+    let original = docMap.get(parentDocId);
+
+    // If parent doc not in BM25 results, create synthetic result for RRF
+    // (semantic leg should contribute independently, RRF will deduplicate downstream)
+    if (!original) {
+      original = {
+        id: parentDocId,
+        text: "",
+        bm25: 0,
+        sourceId: "",
+        path: "",
+        relFile: "",
+        finalScore: 0,
+        sourceKind: "offline" as const,
+      };
     }
+
+    scored.push({ result: original, score });
   }
 
   // Sort by cosine similarity (descending)
