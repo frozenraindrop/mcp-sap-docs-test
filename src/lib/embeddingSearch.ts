@@ -243,6 +243,11 @@ function rrf(rank: number): number {
 // once on first query and reused for every subsequent query.
 let corpusMatrix: Float32Array | null = null;
 let corpusIds: string[] | null = null;
+// Parallel to corpusIds: parent doc id for section-level embeddings, or null
+// for whole-doc embeddings. Used to fold a section hit onto its parent so it
+// shares a dedupeKey with the parent's BM25 hit instead of appearing as a
+// separate near-duplicate result.
+let corpusParentIds: (string | null)[] | null = null;
 let corpusDim = 0;
 
 /**
@@ -255,8 +260,8 @@ function loadCorpusEmbeddings(): boolean {
 
   const db = openDb();
   const rows = db
-    .prepare(`SELECT doc_id, vec FROM embeddings`)
-    .all() as { doc_id: string; vec: Buffer }[];
+    .prepare(`SELECT doc_id, parent_doc_id, vec FROM embeddings`)
+    .all() as { doc_id: string; parent_doc_id: string | null; vec: Buffer }[];
 
   if (rows.length === 0) return false;
 
@@ -280,14 +285,17 @@ function loadCorpusEmbeddings(): boolean {
   }
   const matrix = new Float32Array(rows.length * dim);
   const ids = new Array<string>(rows.length);
+  const parentIds = new Array<string | null>(rows.length);
   for (let i = 0; i < rows.length; i++) {
     const b = rows[i].vec;
     matrix.set(new Float32Array(b.buffer, b.byteOffset, dim), i * dim);
     ids[i] = rows[i].doc_id;
+    parentIds[i] = rows[i].parent_doc_id;
   }
 
   corpusMatrix = matrix;
   corpusIds = ids;
+  corpusParentIds = parentIds;
   corpusDim = dim;
   console.log(`🧠 [SEMANTIC] Loaded full-corpus embeddings: ${rows.length} vectors × ${dim} dim`);
   return true;
@@ -380,33 +388,51 @@ export async function buildSemanticRecall(
     candidateIndexes.push(i);
   }
 
-  // Select top-k by score from documents allowed by the caller's search filters.
-  const order = candidateIndexes
-    .sort((a, b) => scores[b] - scores[a])
-    .slice(0, k);
+  // Full sort (not just top-k) — section rows need to be folded onto their
+  // parent doc before we know which k are actually unique documents.
+  const sorted = candidateIndexes.sort((a, b) => scores[b] - scores[a]);
 
-  // Fetch metadata for just the winners (one IN query).
-  const meta = fetchDocMeta(order.map((i) => ids[i]));
+  // Walk down the ranked list, grouping section hits under their parent doc id
+  // so a page's sections never occupy more than one top-k slot — but keep the
+  // winning row's OWN id (section fragment or whole-doc id) for the emitted
+  // result. Only the grouping key collapses to the parent; the returned id
+  // stays at whatever granularity actually matched, since a section fragment
+  // (e.g. a Clean ABAP guideline anchor) is often the only sensible citation
+  // target — the "parent" can be a 1600-section guide, too coarse to return.
+  const seenDocs = new Set<string>();
+  const winners: { index: number; hitId: string; parentKey: string }[] = [];
+  for (const i of sorted) {
+    const hitId = ids[i];
+    const parentKey = corpusParentIds?.[i] || hitId;
+    if (seenDocs.has(parentKey)) continue;
+    seenDocs.add(parentKey);
+    winners.push({ index: i, hitId, parentKey });
+    if (winners.length >= k) break;
+  }
+
+  // Fetch metadata via the parent key (one IN query) — sections aren't in the
+  // docs/FTS table (BM25 indexes documents, not sections), so display fields
+  // (title, description, relFile) always resolve from the parent doc.
+  const meta = fetchDocMeta(winners.map((w) => w.parentKey));
 
   const semanticWeight = CONFIG.EMBEDDING_WEIGHT;
   const results: SearchResult[] = [];
-  order.forEach((i, rank) => {
-    const id = ids[i];
-    const m = meta.get(id);
+  winners.forEach(({ index, hitId, parentKey }, rank) => {
+    const m = meta.get(parentKey);
     if (!m) return; // embedded doc_id missing from docs table (shouldn't happen)
     const rrfScore = rrf(rank + 1) * semanticWeight;
     results.push({
-      id,
-      text: `${m.title || ""}\n\n${m.description || ""}\n\n${id}`,
+      id: hitId,
+      text: `${m.title || ""}\n\n${m.description || ""}\n\n${hitId}`,
       bm25: 0,
-      sourceId: extractSourceId(m.libraryId || id),
-      path: id,
+      sourceId: extractSourceId(m.libraryId || hitId),
+      path: hitId,
       relFile: m.relFile || "",
       finalScore: rrfScore,
       sourceKind: "semantic",
       debug: {
         rrfScore,
-        boost: scores[i], // cosine similarity, for debugging
+        boost: scores[index], // cosine similarity, for debugging
       },
     });
   });

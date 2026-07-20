@@ -24,6 +24,7 @@ type Doc = {
   embedText?: string;
   keywords?: string[];
   type?: string;
+  parentDocument?: string;
 };
 
 type LibraryBundle = {
@@ -108,8 +109,9 @@ async function main() {
   db.exec(`DROP TABLE IF EXISTS embedding_metadata`);
   db.exec(`
     CREATE TABLE embeddings (
-      doc_id TEXT NOT NULL PRIMARY KEY,
-      vec    BLOB NOT NULL
+      doc_id        TEXT NOT NULL PRIMARY KEY,
+      parent_doc_id TEXT,
+      vec           BLOB NOT NULL
     );
     CREATE TABLE embedding_metadata (
       id             INTEGER PRIMARY KEY CHECK (id = 1),
@@ -121,7 +123,7 @@ async function main() {
 
   const sizeBefore = fs.statSync(DST).size;
 
-  const ins = db.prepare(`INSERT OR REPLACE INTO embeddings (doc_id, vec) VALUES (?, ?)`);
+  const ins = db.prepare(`INSERT OR REPLACE INTO embeddings (doc_id, parent_doc_id, vec) VALUES (?, ?, ?)`);
 
   const startTime = Date.now();
   let inserted = 0;
@@ -141,7 +143,7 @@ async function main() {
       // We pass pre-computed vecs via closure
       const vec = batchVecs[i];
       if (!vec) return;
-      ins.run(doc.id, vec);
+      ins.run(doc.id, doc.parentDocument || null, vec);
       inserted++;
     }
   });

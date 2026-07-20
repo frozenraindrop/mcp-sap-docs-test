@@ -101,12 +101,19 @@ function main() {
         continue;
       }
       for (const d of lib.docs) {
+        // BM25 operates at document granularity — sections are the dense leg's
+        // unit (see build-embeddings.ts); indexing them here too would produce
+        // near-duplicate whole-doc + section hits that need deduping downstream.
+        if (d.type === "markdown-section") {
+          continue;
+        }
+
         const libraryId = libFromId(d.id);
         const keywords = safeText(d.keywords);
         const props = safeText(d.properties);
         const events = safeText(d.events);
         const aggs = safeText(d.aggregations);
-        
+
         // Combine all searchable keywords
         const keywordsAll = [keywords, props, events, aggs].filter(Boolean).join(" ");
 
