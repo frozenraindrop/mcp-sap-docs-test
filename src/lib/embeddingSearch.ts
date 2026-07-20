@@ -127,12 +127,12 @@ export async function buildSemanticResults(
 
   const db = openDb();
 
-  // Fetch stored embeddings for BM25 candidates
+  // Fetch stored embeddings for BM25 candidates (includes sections via parent_doc_id)
   const ids = bm25Results.map((r) => r.id);
   const placeholders = ids.map(() => "?").join(",");
   const rows = db
-    .prepare(`SELECT doc_id, vec FROM embeddings WHERE doc_id IN (${placeholders})`)
-    .all(...ids) as { doc_id: string; vec: Buffer }[];
+    .prepare(`SELECT doc_id, parent_doc_id, vec FROM embeddings WHERE doc_id IN (${placeholders})`)
+    .all(...ids) as { doc_id: string; parent_doc_id: string | null; vec: Buffer }[];
 
   if (rows.length === 0) return [];
 
@@ -145,9 +145,10 @@ export async function buildSemanticResults(
     return [];
   }
 
-  // Score each candidate
+  // Score each candidate and remap section hits to parent docs
   const scored: { result: SearchResult; score: number }[] = [];
   const docMap = new Map(bm25Results.map((r) => [r.id, r]));
+  const bestScorePerParent = new Map<string, number>();
 
   for (const row of rows) {
     const docVec = new Float32Array(
@@ -156,7 +157,20 @@ export async function buildSemanticResults(
       row.vec.byteLength / 4
     );
     const score = cosineSimilarity(queryVec, docVec);
-    const original = docMap.get(row.doc_id);
+
+    // Determine the effective doc ID: parent if section, otherwise self
+    const effectiveDocId = row.parent_doc_id || row.doc_id;
+
+    // Track best score per effective doc (deduplicate sections to their parent)
+    const existing = bestScorePerParent.get(effectiveDocId);
+    if (!existing || score > existing) {
+      bestScorePerParent.set(effectiveDocId, score);
+    }
+  }
+
+  // Build results from best scores per doc
+  for (const [docId, score] of bestScorePerParent.entries()) {
+    const original = docMap.get(docId);
     if (original) {
       scored.push({ result: original, score });
     }

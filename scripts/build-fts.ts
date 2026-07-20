@@ -101,12 +101,17 @@ function main() {
         continue;
       }
       for (const d of lib.docs) {
+        // Skip section entries — BM25 operates at document granularity
+        if (d.type === "markdown-section") {
+          continue;
+        }
+
         const libraryId = libFromId(d.id);
         const keywords = safeText(d.keywords);
         const props = safeText(d.properties);
         const events = safeText(d.events);
         const aggs = safeText(d.aggregations);
-        
+
         // Combine all searchable keywords
         const keywordsAll = [keywords, props, events, aggs].filter(Boolean).join(" ");
 

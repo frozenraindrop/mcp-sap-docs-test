@@ -20,6 +20,7 @@ type Doc = {
   description?: string;
   keywords?: string[];
   type?: string;
+  parentDocument?: string;
 };
 
 type LibraryBundle = {
@@ -64,16 +65,16 @@ async function main() {
   console.log(`📖 Reading index from ${SRC}...`);
   const raw = JSON.parse(fs.readFileSync(SRC, "utf8")) as Record<string, LibraryBundle>;
 
-  // Filter: embed only markdown and jsdoc docs (not markdown-section or sample)
+  // Filter: embed markdown, markdown-section, and jsdoc docs (not sample)
   const docs: Doc[] = [];
   for (const lib of Object.values(raw)) {
     for (const d of lib.docs) {
-      if (d.type === "markdown" || d.type === "jsdoc") {
+      if (d.type === "markdown" || d.type === "markdown-section" || d.type === "jsdoc") {
         docs.push(d);
       }
     }
   }
-  console.log(`📄 Documents to embed: ${docs.length} (markdown + jsdoc only)`);
+  console.log(`📄 Documents to embed: ${docs.length} (markdown, markdown-section, and jsdoc)`);
 
   // Configure transformers to store model in dist/models/ (project-local, gitignored)
   fs.mkdirSync(MODELS_DIR, { recursive: true });
@@ -98,13 +99,14 @@ async function main() {
   db.exec(`
     CREATE TABLE embeddings (
       doc_id TEXT NOT NULL PRIMARY KEY,
-      vec    BLOB NOT NULL
+      parent_doc_id TEXT,
+      vec BLOB NOT NULL
     )
   `);
 
   const sizeBefore = fs.statSync(DST).size;
 
-  const ins = db.prepare(`INSERT OR REPLACE INTO embeddings (doc_id, vec) VALUES (?, ?)`);
+  const ins = db.prepare(`INSERT OR REPLACE INTO embeddings (doc_id, parent_doc_id, vec) VALUES (?, ?, ?)`);
 
   const startTime = Date.now();
   let inserted = 0;
@@ -123,7 +125,7 @@ async function main() {
       // We pass pre-computed vecs via closure
       const vec = batchVecs[i];
       if (!vec) return;
-      ins.run(doc.id, vec);
+      ins.run(doc.id, doc.parentDocument || null, vec);
       inserted++;
     }
   });
