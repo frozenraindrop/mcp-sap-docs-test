@@ -24,6 +24,7 @@ import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
 import { startServerHttp, waitForStatus, stopServer, search } from "../_utils/httpClient.js";
 import EVAL_QUERIES from "./eval-queries.js";
+import { pairedBootstrap, signTestP } from "./stats.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BASELINE_PATH = join(__dirname, "baseline.json");
@@ -110,41 +111,6 @@ function fmtDelta(now, was) {
 // 2) Sign test on hit@k flips: among queries that flipped (gained or lost the
 //    hit), is the gain/loss split lopsided enough to be non-random? Two-sided
 //    binomial against p=0.5. Ties (no flip) are ignored, per the sign test.
-function percentile(sorted, p) {
-  if (sorted.length === 0) return NaN;
-  const idx = Math.min(sorted.length - 1, Math.max(0, Math.round(p * (sorted.length - 1))));
-  return sorted[idx];
-}
-
-function bootstrapDeltaMRR(deltas, B = 10000) {
-  const n = deltas.length;
-  if (n === 0) return null;
-  const means = new Array(B);
-  for (let b = 0; b < B; b++) {
-    let sum = 0;
-    for (let i = 0; i < n; i++) sum += deltas[(Math.random() * n) | 0];
-    means[b] = sum / n;
-  }
-  means.sort((a, b) => a - b);
-  const point = deltas.reduce((s, d) => s + d, 0) / n;
-  return { point, lo: percentile(means, 0.025), hi: percentile(means, 0.975), n };
-}
-
-// Two-sided sign test p-value: P(|flips| as lopsided as observed) under p=0.5.
-function signTestP(gain, loss) {
-  const n = gain + loss;
-  if (n === 0) return 1;
-  const lo = Math.min(gain, loss);
-  // Sum the two symmetric binomial tails: 2 * Σ_{i=0..lo} C(n,i) (0.5)^n, capped at 1.
-  let logC = 0; // log C(n,0) = 0
-  let tail = Math.exp(-n * Math.LN2); // C(n,0) * 0.5^n
-  for (let i = 1; i <= lo; i++) {
-    logC += Math.log((n - i + 1) / i); // C(n,i) from C(n,i-1)
-    tail += Math.exp(logC - n * Math.LN2);
-  }
-  return Math.min(1, 2 * tail);
-}
-
 async function main() {
   const server = startServerHttp();
   let report;
@@ -238,7 +204,7 @@ async function main() {
     }
     const unpaired = report.rows.length - deltas.length;
     console.log(paint("Significance", "bold") + paint(`  (paired over ${deltas.length} shared queries${unpaired ? `, ${unpaired} new excluded` : ""})`, "dim"));
-    const ci = bootstrapDeltaMRR(deltas);
+    const ci = pairedBootstrap(deltas);
     if (ci) {
       const real = ci.lo > 0 || ci.hi < 0;
       const ciStr = `[${ci.lo >= 0 ? "+" : ""}${(ci.lo * 100).toFixed(1)}%, ${ci.hi >= 0 ? "+" : ""}${(ci.hi * 100).toFixed(1)}%]`;
