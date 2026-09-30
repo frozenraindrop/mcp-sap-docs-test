@@ -83,7 +83,7 @@ on its own).
 | id | what | notes |
 |----|------|-------|
 | A2 | current: LiQL per-term subject searches + broad search, rescored by subject term hits > kudos > recency | baseline; `minKudos` default 1 hides zero-kudos posts |
-| A2b | AND-composed `MATCHES` per significant term, stopwords removed, word-boundary scoring | targets the two confirmed bugs (stopword terms, substring `.includes`) |
+| A2b | all significant terms required via the AND operator INSIDE one MATCHES string, stopwords removed, word-boundary scoring, relaxes by one term if too few results | targets the two confirmed bugs. Several ANDed MATCHES clauses are rejected by LiQL (HTTP 400, code 604); `subject MATCHES 'hana AND hdi'` works (20/20 subjects have both words vs 0/20 for plain `'hana hdi'`). Verified live 2026-09-30 |
 | A3a | SearXNG `site:community.sap.com` discovery, then current kudos/recency weighting | isolates "better candidates" from "better ordering" |
 | A3b | SearXNG raw order, no custom weighting, no kudos filter | the user's "trust the engine" variant |
 | A4 | the site's own Best Match ranking | **Blocked for plain HTTP**: the source comment blames AWS WAF; a direct request to the site's HTML search page on 2026-09-30 got HTTP 403 with a "Just a moment..." bot-challenge page (the vendor may differ from the comment). The LiQL API (what A2 uses) returned 200. Dropped unless a sanctioned endpoint turns up |

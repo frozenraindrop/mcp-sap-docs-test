@@ -21,6 +21,8 @@ export const STRATEGIES = {
     const { searchCommunityBestMatch } = await import(pathToFileURL(resolve("dist/src/lib/communityBestMatch.js")).href);
     return searchCommunityBestMatch(query, { limit: k, minKudos, includeBlogs: true, userAgent: "SAP-Docs-MCP-eval/1.0" });
   },
+  // A2b: AND-composed LiQL MATCHES per significant term (see community-strategies.js).
+  and: async (query, opts) => (await import("./community-strategies.js")).searchCommunityAnd(query, opts),
 };
 
 // Same id scheme as searchCommunity() in localDocs.ts, so fetchLibraryDocumentation can hydrate it.

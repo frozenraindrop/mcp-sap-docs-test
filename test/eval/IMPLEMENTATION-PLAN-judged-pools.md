@@ -157,6 +157,12 @@
   `community-queries.js` is a 12-query starter set. Verified live: 3 queries x 5 results produced and all 15
   posts hydrated via fetch. Judging them was deliberately not run (quota).
 - **Step 8:** README section added to `test/eval/README.md`.
+- **A2b (`--strategy and`, `community-strategies.js`):** implemented as a candidate in the harness. The design's
+  "AND-compose one MATCHES clause per term" was WRONG: LiQL returns HTTP 400 (code 604) for several ANDed MATCHES.
+  What works is the AND operator inside one MATCHES string, in the production `(subject ... OR body ...)` shape.
+  Falls back to "drop one term" ANDs when fewer than k posts are found; same kudos filter and ranking rule as
+  `current`, so differences isolate the matching. First pooled result (3 queries, haiku judge, unaudited):
+  nDCG@5 0.75 vs 0.58, off-topic@5 7% vs 20%, P@5 equal; recall is thinner (one query returned only 2 posts).
 
 ### Step 7. Shakedown: reranker on/off
 - Decision rule (write into the PR description **before** running): adopt the reranker only
