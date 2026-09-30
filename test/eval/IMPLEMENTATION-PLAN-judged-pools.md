@@ -145,6 +145,19 @@
   `judgments-audit.json`. If exact agreement is low, revise `rubric.md`, bump
   `promptVersion`, re-judge. Do not draw conclusions before this passes.
 
+### Steps 6 and 8, and the Community-ready pool: implemented (2026-09-30)
+- **Step 6, `audit.js`:** `sample` (balanced across AI grades, seeded) writes `audit/sheet.md` (rubric + query +
+  document, AI grade hidden) and `audit/key.json`; `report` gives exact / within-1 / relevant(>=2) agreement,
+  mean bias and a confusion matrix; partial grading works and `sample` refuses to overwrite typed grades.
+  Second-opinion mode: `ai-prompts` + `report --ai-replies` has a different model regrade the same sample.
+  Needs `runs/texts.json` (what the judge saw), which `pool.js` now writes. Not yet run on real data.
+- **Community-ready pool:** `pool.js --from-runs [--dir d]` pools ready-made run files without a server;
+  `--queries`, `--search-option KEY=VALUE` and `--dir` added. `community-produce.js --strategy current` writes
+  a run file straight from the Community code (strategies registry; AND-fix / SearXNG to be added) and
+  `community-queries.js` is a 12-query starter set. Verified live: 3 queries x 5 results produced and all 15
+  posts hydrated via fetch. Judging them was deliberately not run (quota).
+- **Step 8:** README section added to `test/eval/README.md`.
+
 ### Step 7. Shakedown: reranker on/off
 - Decision rule (write into the PR description **before** running): adopt the reranker only
   if the paired nDCG@10 delta CI excludes 0 **and** added latency is acceptable (code

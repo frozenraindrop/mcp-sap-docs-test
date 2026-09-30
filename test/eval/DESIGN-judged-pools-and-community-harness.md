@@ -86,7 +86,7 @@ on its own).
 | A2b | AND-composed `MATCHES` per significant term, stopwords removed, word-boundary scoring | targets the two confirmed bugs (stopword terms, substring `.includes`) |
 | A3a | SearXNG `site:community.sap.com` discovery, then current kudos/recency weighting | isolates "better candidates" from "better ordering" |
 | A3b | SearXNG raw order, no custom weighting, no kudos filter | the user's "trust the engine" variant |
-| A4 (verify first) | the site's own Best Match ranking | old HTML scraper was removed (only LiQL remains); needs checking whether it is still feasible |
+| A4 | the site's own Best Match ranking | **Blocked for plain HTTP**: the source comment blames AWS WAF; a direct request to the site's HTML search page on 2026-09-30 got HTTP 403 with a "Just a moment..." bot-challenge page (the vendor may differ from the comment). The LiQL API (what A2 uses) returned 200. Dropped unless a sanctioned endpoint turns up |
 
 Backend for A3 is an open item (see below); the harness treats it as just another strategy.
 
@@ -112,7 +112,7 @@ excludes 0, AND the operational cost is acceptable. Then only behind an optional
   server IPs. Check whether it runs on this machine (Zscaler).
 - Check current availability and terms of alternative backends (e.g. a web-search API)
   instead of relying on memory.
-- Whether A4 is viable.
+- (A4 resolved: dropped, see the table.)
 
 ## Order of work
 1. Judge + pool cache + coverage reporting (Part 1), audit labels.
