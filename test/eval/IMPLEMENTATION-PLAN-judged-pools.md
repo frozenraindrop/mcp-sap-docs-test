@@ -100,6 +100,25 @@
 - **Calibration:** `--calibrate N` judges N already-local-judged items again with Claude and
   reports exact / within-1 agreement. Needed before trusting a local judge for bulk work.
 - **Check:** dry-run on 5 tasks per backend; output validates against the schema.
+- **Implemented (2026-09-30), deviations from the above:**
+  - Files: `rubric.md`, `judge-core.js` (prompt, reply parsing/validation, token estimate),
+    `judge.js` (commands `estimate`, `prompts`, `ingest`, `local`), `judge-workflow.js` (Claude route).
+  - `promptVersion` = `rubric-<sha1 of rubric.md, 8 chars>`: editing the rubric automatically stales every
+    cached judgment; `pool.js` uses the same value and `judge.js` refuses tasks built for another rubric.
+  - Claude route = `judge.js prompts` -> `judge-workflow.js` -> `judge.js ingest --judge-model <label>`.
+    Workflow scripts have no file/Node access, so each agent reads its own `batch-NNN.prompt.txt` and writes
+    `batch-NNN.reply.txt`; ingest does all validation. `agent()` accepts `model` and `effort`, so the judge
+    model IS pinnable (script defaults: `haiku`, `low`); keep batches per run small.
+  - `prompts` deletes old `batch-*` files first (a leftover reply would otherwise answer a new batch with the
+    same number). `ingest` needs `--judge-model` so the cache records what really judged.
+  - `local` = OpenAI-compatible `/v1/chat/completions`, `temperature 0`, JSON mode, one retry per unusable
+    batch, cache saved after every batch. Tested against a mock server only; not yet run against a real Ollama.
+  - NOT done yet: `--calibrate N`, and `judge-workflow.js` has been syntax-reviewed only (the sample run used
+    the Agent tool with the same instructions and model). Run it once before relying on it.
+  - Sample-run finding: section ids (`file#heading`) fetched the start of the whole file, so the judge saw a table
+    of contents. `pool.js` now extracts the section under the matching heading (`extractSection`; source files use
+    CRLF, which broke the first version). Judgments for those docs changed (2->3, 1->3) and the cache re-queued
+    exactly those 3, leaving the other 17 cached.
 
 ### Step 5. Scoring (`score-judged.js`)
 - Reads `runs/*.json` + cache; for each variant, per query: grades of top-k (unjudged =

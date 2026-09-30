@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 // @ts-expect-error plain JS modules shared with the eval scripts
-import { buildTasks, identicalRankings, parseResults, parseVariant, renderJudgeText, unionPool } from "./eval/pool.js";
+import { buildTasks, extractSection, identicalRankings, parseResults, parseVariant, renderJudgeText, unionPool } from "./eval/pool.js";
 // @ts-expect-error plain JS module
 import { hashContent, upsert } from "./eval/judgments.js";
 
@@ -139,5 +139,42 @@ describe("pool: identicalRankings", () => {
 
   it("is false when nothing is comparable", () => {
     expect(identicalRankings(run("a", { q1: ["d1"] }), run("b", { q9: ["d1"] }), 3)).toBe(false);
+  });
+});
+
+describe("pool: extractSection", () => {
+  const lines = [
+    "# Doc", "- [Intro](#intro)", "", "## Intro", "intro text", "",
+    "## Compressing and Decompressing Binary Data", "gzip text", "```abap", "# not a heading", "```",
+    "### Sub point", "sub text", "", "## Next Topic", "other text",
+  ];
+  const md = lines.join("\n");
+
+  it("returns the section up to the next heading of the same or higher level", () => {
+    const s = extractSection(md, "compressing-and-decompressing-binary-data");
+    expect(s.startsWith("## Compressing and Decompressing Binary Data")).toBe(true);
+    expect(s).toContain("gzip text");
+    expect(s).toContain("### Sub point"); // deeper headings stay inside the section
+    expect(s).toContain("# not a heading"); // fenced lines are not headings
+    expect(s).not.toContain("Next Topic");
+    expect(s).not.toContain("intro text");
+  });
+
+  it("works on CRLF files (the real sources use \r\n)", () => {
+    const s = extractSection(lines.join("\r\n"), "compressing-and-decompressing-binary-data");
+    expect(s).not.toBeNull();
+    expect(s).toContain("gzip text");
+    expect(s).not.toContain("\r");
+    expect(s).not.toContain("Next Topic");
+  });
+
+  it("runs to the end for the last section and returns null for an unknown fragment", () => {
+    expect(extractSection(md, "next-topic")).toBe("## Next Topic\nother text");
+    expect(extractSection(md, "does-not-exist")).toBeNull();
+    expect(extractSection("", "x")).toBeNull();
+  });
+
+  it("slugs punctuation like GitHub (drops it, keeps hyphens)", () => {
+    expect(extractSection("## Step 1: Set-up (v2)\nbody", "step-1-set-up-v2")).toBe("## Step 1: Set-up (v2)\nbody");
   });
 });

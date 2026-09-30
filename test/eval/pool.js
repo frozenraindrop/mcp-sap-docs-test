@@ -18,6 +18,7 @@ import { execSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { hashContent, loadJudgments, lookup } from "./judgments.js";
+import { loadRubric, promptVersionOf } from "./judge-core.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const RUNS_DIR = join(__dirname, "runs");
@@ -25,7 +26,6 @@ const TASKS_PATH = join(__dirname, "tasks.json");
 const JUDGMENTS_PATH = join(__dirname, "judgments.json");
 const DEFAULT_K = 10;
 const DEFAULT_MAX_CHARS = 1500;
-const DEFAULT_PROMPT_VERSION = "v1"; // ponytail: tie to rubric.md's version when the judge step lands
 
 // ── Pure helpers ─────────────────────────────────────────────────────────────
 
@@ -48,6 +48,29 @@ export function parseResults(text) {
 export function renderJudgeText({ id, title, url, content, maxChars = DEFAULT_MAX_CHARS }) {
   const body = String(content ?? "").trim().slice(0, maxChars);
   return `Title: ${title}\nSource: ${id}${url ? `\nURL: ${url}` : ""}\n\n${body}`;
+}
+
+// GitHub-style heading slug: lowercase, drop punctuation, spaces to hyphens.
+const slug = (h) => h.trim().toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, "").replace(/\s/g, "-");
+
+// Return the markdown section under the heading whose slug is `fragment`, up to the next
+// heading of the same or higher level (headings inside code fences are ignored).
+// null if no such heading, so the caller can fall back to the search snippet.
+export function extractSection(markdown, fragment) {
+  const lines = String(markdown ?? "").replace(/\r\n?/g, "\n").split("\n"); // sources use CRLF; `.` won't match a trailing \r
+  let inFence = false, start = -1, level = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\s*(```|~~~)/.test(lines[i])) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    const m = /^(#{1,6})\s+(.*)$/.exec(lines[i]);
+    if (!m) continue;
+    if (start === -1) {
+      if (slug(m[2]) === fragment) { start = i; level = m[1].length; }
+    } else if (m[1].length <= level) {
+      return lines.slice(start, i).join("\n").trim();
+    }
+  }
+  return start === -1 ? null : lines.slice(start).join("\n").trim();
 }
 
 // runs: [{ variant, queries: [{ queryId, results: [{id, title, snippet, url}] }] }]
@@ -131,7 +154,7 @@ async function main() {
   const k = Number(argValues(args, "--k")[0] ?? DEFAULT_K);
   const maxChars = Number(argValues(args, "--max-chars")[0] ?? DEFAULT_MAX_CHARS);
   const limit = Number(argValues(args, "--limit")[0] ?? Infinity);
-  const promptVersion = argValues(args, "--prompt-version")[0] ?? DEFAULT_PROMPT_VERSION;
+  const promptVersion = argValues(args, "--prompt-version")[0] ?? promptVersionOf(loadRubric());
 
   const { startServerHttp, waitForStatus, stopServer, search } = await import("../_utils/httpClient.js");
   const { default: EVAL_QUERIES } = await import("./eval-queries.js");
@@ -191,6 +214,8 @@ async function main() {
   for (const d of meta.values()) {
     let content = null;
     try { content = await fetchLibraryDocumentation(d.id); } catch { /* fall back to the search snippet */ }
+    // Section ids ("file#heading") fetch the whole file; show the judge just that section.
+    if (content && d.id.includes("#")) content = extractSection(content, d.id.slice(d.id.indexOf("#") + 1));
     const via = content ? "fetch" : "snippet";
     if (content) fromFetch++; else fromSnippet++;
     hydrated.set(d.id, { via, text: renderJudgeText({ ...d, content: content || d.snippet, maxChars }) });
