@@ -20,9 +20,9 @@ async function sleep(ms) {
   return new Promise(r => setTimeout(r, ms)); 
 }
 
-export function startServerHttp() {
+export function startServerHttp(extraEnv = {}) {
   return spawn('node', ['dist/src/http-server.js'], {
-    env: { ...process.env, PORT: TEST_PORT },
+    env: { ...process.env, ...extraEnv, PORT: TEST_PORT },
     stdio: 'ignore'
   });
 }
