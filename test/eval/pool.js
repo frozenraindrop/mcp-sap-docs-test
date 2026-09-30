@@ -2,6 +2,8 @@
 //
 //   node test/eval/pool.js --variant reranker-off:RERANKER_ENABLED=false \
 //                          --variant reranker-on:RERANKER_ENABLED=true [--k 10] [--limit 5]
+//                          [--queries my-queries.js] [--search-option includeOnline=true] [--dir test/eval/runs-x]
+//   node test/eval/pool.js --from-runs [--dir test/eval/runs-community]   # pool ready-made run files, no server
 //
 // For every variant it starts the built server (dist/) with that env, runs the eval
 // queries (offline only, so results are deterministic), and saves the ranking to
@@ -13,7 +15,7 @@
 // Pure helpers are exported for tests; the server/CLI part only runs when invoked directly.
 
 import { createHash } from "node:crypto";
-import { createReadStream, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -134,6 +136,33 @@ export function parseVariant(spec) {
   return { name, env };
 }
 
+// "KEY=VALUE" -> [KEY, parsed]; VALUE is parsed as JSON when possible (true, 5, ["a"]), else kept as text.
+export function parseSearchOption(spec) {
+  const eq = spec.indexOf("=");
+  if (eq < 1) throw new Error(`bad --search-option "${spec}" (expected KEY=VALUE)`);
+  const raw = spec.slice(eq + 1);
+  let value = raw;
+  try { value = JSON.parse(raw); } catch { /* plain text */ }
+  return [spec.slice(0, eq), value];
+}
+
+// Unique [{id, query}] across runs, so tasks carry the query text whatever produced the runs.
+export function queriesFromRuns(runs) {
+  const seen = new Map();
+  for (const run of runs) for (const q of run.queries) if (!seen.has(q.queryId)) seen.set(q.queryId, { id: q.queryId, query: q.query ?? "" });
+  return [...seen.values()];
+}
+
+// Every run file in `dir` (shape: has a `queries` array); pool.json / texts.json are skipped by shape.
+export function loadRunFiles(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .sort()
+    .map((f) => JSON.parse(readFileSync(join(dir, f), "utf8")))
+    .filter((r) => Array.isArray(r?.queries));
+}
+
 // ── CLI (server + filesystem) ────────────────────────────────────────────────
 
 function sha1OfFile(path) {
@@ -147,26 +176,13 @@ function argValues(args, flag) {
   return args.flatMap((a, i) => (a === flag ? [args[i + 1]] : []));
 }
 
-async function main() {
-  const args = process.argv.slice(2);
-  const variants = argValues(args, "--variant").map(parseVariant);
-  if (variants.length === 0) throw new Error("need at least one --variant name:KEY=VAL (e.g. base:)");
-  const k = Number(argValues(args, "--k")[0] ?? DEFAULT_K);
-  const maxChars = Number(argValues(args, "--max-chars")[0] ?? DEFAULT_MAX_CHARS);
-  const limit = Number(argValues(args, "--limit")[0] ?? Infinity);
-  const promptVersion = argValues(args, "--prompt-version")[0] ?? promptVersionOf(loadRubric());
-
+async function collectViaServer({ variants, queries, k, searchOptions, runsDir }) {
   const { startServerHttp, waitForStatus, stopServer, search } = await import("../_utils/httpClient.js");
-  const { default: EVAL_QUERIES } = await import("./eval-queries.js");
-  const queries = EVAL_QUERIES.slice(0, limit);
-
-  const dataDir = join(process.cwd(), "dist", "data");
-  const sqlite = join(dataDir, "docs.sqlite");
+  const sqlite = join(process.cwd(), "dist", "data", "docs.sqlite");
   const indexHash = existsSync(sqlite) ? await sha1OfFile(sqlite) : "unknown";
   let gitCommit = "unknown";
   try { gitCommit = execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim(); } catch { /* not a git checkout */ }
 
-  mkdirSync(RUNS_DIR, { recursive: true });
   const runs = [];
   for (const v of variants) {
     console.log(`▶ variant "${v.name}" env=${JSON.stringify(v.env)}`);
@@ -177,7 +193,7 @@ async function main() {
       await waitForStatus();
       for (const q of queries) {
         const t0 = Date.now();
-        const text = await search(q.query, { includeOnline: false, k });
+        const text = await search(q.query, { includeOnline: false, ...searchOptions, k });
         latencies.push(Date.now() - t0);
         out.push({ queryId: q.id, query: q.query, results: parseResults(text) });
       }
@@ -186,14 +202,42 @@ async function main() {
     }
     latencies.sort((a, b) => a - b);
     const run = {
-      variant: v.name, env: v.env, gitCommit, indexHash, k, createdAt: new Date().toISOString(),
+      variant: v.name, env: v.env, searchOptions: { includeOnline: false, ...searchOptions, k },
+      gitCommit, indexHash, k, createdAt: new Date().toISOString(),
       latencyMs: { p50: latencies[Math.floor(latencies.length * 0.5)], p95: latencies[Math.floor(latencies.length * 0.95)] },
       queries: out,
     };
-    writeFileSync(join(RUNS_DIR, `${v.name}.json`), JSON.stringify(run, null, 2) + "\n");
+    writeFileSync(join(runsDir, `${v.name}.json`), JSON.stringify(run, null, 2) + "\n");
     runs.push(run);
     console.log(`  ${out.length} queries, latency p50=${run.latencyMs.p50}ms p95=${run.latencyMs.p95}ms`);
   }
+  return runs;
+}
+
+async function main() {
+  const args = process.argv.slice(2);
+  const fromRuns = args.includes("--from-runs");
+  const variants = argValues(args, "--variant").map(parseVariant);
+  if (!fromRuns && variants.length === 0) throw new Error("need --variant name:KEY=VAL (e.g. base:) or --from-runs to pool ready-made run files");
+  const k = Number(argValues(args, "--k")[0] ?? DEFAULT_K);
+  const maxChars = Number(argValues(args, "--max-chars")[0] ?? DEFAULT_MAX_CHARS);
+  const limit = Number(argValues(args, "--limit")[0] ?? Infinity);
+  const promptVersion = argValues(args, "--prompt-version")[0] ?? promptVersionOf(loadRubric());
+  const runsDir = resolve(argValues(args, "--dir")[0] ?? RUNS_DIR);
+  const searchOptions = Object.fromEntries(argValues(args, "--search-option").map(parseSearchOption));
+  mkdirSync(runsDir, { recursive: true });
+
+  let runs;
+  if (fromRuns) {
+    runs = loadRunFiles(runsDir);
+    if (runs.length === 0) throw new Error(`no run files in ${runsDir}`);
+    console.log(`Pooling ${runs.length} ready-made run(s) from ${runsDir}: ${runs.map((r) => r.variant).join(", ")}`);
+  } else {
+    const queryFile = argValues(args, "--queries")[0];
+    const { default: all } = await import(queryFile ? pathToFileURL(resolve(queryFile)).href : "./eval-queries.js");
+    runs = await collectViaServer({ variants, queries: all.slice(0, limit), k, searchOptions, runsDir });
+  }
+  const queries = queriesFromRuns(runs);
 
   for (let i = 0; i < runs.length; i++) {
     for (let j = i + 1; j < runs.length; j++) {
@@ -222,9 +266,10 @@ async function main() {
   }
 
   // The scorer needs each pooled doc's CURRENT content hash to tell usable judgments from stale ones
-  // (tasks.json only lists the pairs still to judge).
+  // (tasks.json only lists the pairs still to judge). texts.json keeps what the judge saw, for the audit.
   const docs = Object.fromEntries([...hydrated].map(([id, h]) => [id, hashContent(h.text)]));
-  writeFileSync(join(RUNS_DIR, "pool.json"), JSON.stringify({ promptVersion, maxChars, docs }, null, 2) + "\n");
+  writeFileSync(join(runsDir, "pool.json"), JSON.stringify({ promptVersion, maxChars, docs }, null, 2) + "\n");
+  writeFileSync(join(runsDir, "texts.json"), JSON.stringify(Object.fromEntries([...hydrated].map(([id, h]) => [id, h.text])), null, 2) + "\n");
 
   const entries = loadJudgments(JUDGMENTS_PATH);
   const tasks = buildTasks({ pool, queries, hydrated, entries, promptVersion });

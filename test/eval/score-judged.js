@@ -7,10 +7,11 @@
 // "unjudged", which is reported (coverage) and never silently scored as irrelevant.
 // With exactly two variants it also prints the paired comparison.
 
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadJudgments, lookup } from "./judgments.js";
+import { loadRunFiles } from "./pool.js";
 import { loadRubric, promptVersionOf } from "./judge-core.js";
 import { anyAtLeast, ndcg, pairedBootstrap, precisionAt, seededRng, signTestP } from "./stats.js";
 
@@ -132,8 +133,7 @@ function main() {
   const poolPath = join(runsDir, "pool.json");
   if (!existsSync(poolPath)) throw new Error(`${poolPath} not found. Run pool.js first.`);
   const pool = JSON.parse(readFileSync(poolPath, "utf8"));
-  const runs = readdirSync(runsDir).filter((f) => f.endsWith(".json") && f !== "pool.json").sort()
-    .map((f) => JSON.parse(readFileSync(join(runsDir, f), "utf8")));
+  const runs = loadRunFiles(runsDir);
   if (runs.length === 0) throw new Error(`no run files in ${runsDir}`);
 
   const notes = [];

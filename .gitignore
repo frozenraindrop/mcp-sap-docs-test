@@ -18,3 +18,5 @@ mta-*.mtaext
 test/eval/runs/
 test/eval/tasks.json
 test/eval/judge-batches/
+test/eval/runs-*/
+test/eval/audit/
