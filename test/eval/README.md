@@ -146,8 +146,9 @@ node test/eval/judge.js prompts && ... && node test/eval/judge.js ingest --judge
 node test/eval/score-judged.js --runs test/eval/runs-community
 ```
 
-Strategies so far: `current` (today's behaviour) and `and` (every significant term required, see
-`community-strategies.js`). Add more (SearXNG, ...) to `STRATEGIES` in `community-produce.js`, run each with
+Strategies so far: `current` (today's behaviour), `and` (every significant term required, see
+`community-strategies.js`) and `searxng` (`--searxng-url`; engine order, see `community-searxng.js`; public
+instances proved unusable, it needs a self-hosted instance with working engines). Add more (SearXNG, ...) to `STRATEGIES` in `community-produce.js`, run each with
 its own `--name`, and `score-judged.js --compare A B` compares them. `community-queries.js` is only a 12-query
 starter set: extend it before trusting any difference. (The site's own "Best Match" page is not an
 option: plain HTTP requests to its HTML search page get a 403 bot-challenge page.)

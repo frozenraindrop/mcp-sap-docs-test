@@ -108,8 +108,14 @@ excludes 0, AND the operational cost is acceptable. Then only behind an optional
 (e.g. `SEARXNG_URL`), off by default.
 
 ### Open items to verify (not assumed)
-- SearXNG needs self-hosting; public instances are unreliable and upstream engines throttle
-  server IPs. Check whether it runs on this machine (Zscaler).
+- SearXNG on PUBLIC instances was tried on 2026-09-30 (list from searx.space, low-volume polite probes) and
+  is NOT usable for this eval: of 29 healthy-looking instances, 2 answered JSON at all; the rest return 429/403
+  (their own bot limiters, deliberately not circumvented) or HTML. The best one (search.mectov.my.id) is backed
+  by Bing only (Google "Suspended: CAPTCHA"), and Bing ignored `site:community.sap.com` for multi-word queries,
+  returning unrelated pages (0 community posts for 3 of 3 queries). The bottleneck is the upstream engines, not
+  SearXNG. A3 therefore needs a self-hosted instance with working engines (Google/Brave/DDG are likely to
+  throttle a server or corporate IP too) or a keyed search API (Tavily, Brave Search API; check current terms).
+  The `searxng` strategy is implemented and tested (mock) and ready to point at such a backend.
 - Check current availability and terms of alternative backends (e.g. a web-search API)
   instead of relying on memory.
 - (A4 resolved: dropped, see the table.)

@@ -4,6 +4,7 @@
 //
 //   node test/eval/community-produce.js --strategy current [--min-kudos 1] [--k 10] [--limit 5]
 //        [--queries test/eval/community-queries.js] [--name community-current] [--dir test/eval/runs-community]
+//        [--searxng-url https://instance]   (strategy searxng only)
 //   node test/eval/pool.js --from-runs --dir test/eval/runs-community
 //
 // Needs `npm run build:tsc` first (imports dist/) and network access to community.sap.com.
@@ -23,6 +24,8 @@ export const STRATEGIES = {
   },
   // A2b: AND-composed LiQL MATCHES per significant term (see community-strategies.js).
   and: async (query, opts) => (await import("./community-strategies.js")).searchCommunityAnd(query, opts),
+  // A3b: SearXNG discovery (engine order, no weighting); needs --searxng-url or SEARXNG_URL (see community-searxng.js).
+  searxng: async (query, opts) => (await import("./community-searxng.js")).searchCommunitySearxng(query, opts),
 };
 
 // Same id scheme as searchCommunity() in localDocs.ts, so fetchLibraryDocumentation can hydrate it.
@@ -71,7 +74,8 @@ async function main() {
   try { gitCommit = execSync("git rev-parse --short HEAD", { encoding: "utf8" }).trim(); } catch { /* not a git checkout */ }
 
   console.log(`▶ ${name}: strategy=${strategyName} minKudos=${minKudos} k=${k} over ${Math.min(limit, all.length)} queries`);
-  const { run, failed } = await produceRun({ strategy, name, queries: all.slice(0, limit), k, opts: { minKudos } });
+  const searxngUrl = flag(args, "--searxng-url");
+  const { run, failed } = await produceRun({ strategy, name, queries: all.slice(0, limit), k, opts: { minKudos, ...(searxngUrl && { searxngUrl }) } });
   run.strategy = strategyName;
   run.gitCommit = gitCommit;
   run.createdAt = new Date().toISOString();

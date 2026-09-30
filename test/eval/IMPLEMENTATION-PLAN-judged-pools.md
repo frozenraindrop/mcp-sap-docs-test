@@ -163,6 +163,9 @@
   Falls back to "drop one term" ANDs when fewer than k posts are found; same kudos filter and ranking rule as
   `current`, so differences isolate the matching. First pooled result (3 queries, haiku judge, unaudited):
   nDCG@5 0.75 vs 0.58, off-topic@5 7% vs 20%, P@5 equal; recall is thinner (one query returned only 2 posts).
+- **A3b (`--strategy searxng`, `community-searxng.js`):** implemented (pages with pauses, honest User-Agent, no
+  rate-limit workarounds, 429s surface as failed queries). Live attempt against public instances found nothing
+  usable, see the design doc's open items. No judgments were made from it.
 
 ### Step 7. Shakedown: reranker on/off
 - Decision rule (write into the PR description **before** running): adopt the reranker only
