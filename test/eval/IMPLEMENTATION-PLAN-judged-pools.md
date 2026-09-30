@@ -129,6 +129,15 @@
 - Paired comparison of two named variants: per-query delta of nDCG@10, bootstrap CI, sign
   test on queries that flipped across the any>=2@5 threshold.
 - `--json` output for machine use, same convention as `run-eval.js`.
+- **Implemented (2026-09-30):** `score-judged.js` (CLI; pure `scoreRuns` / `compareVariants` exported).
+  - `pool.js` now also writes `runs/pool.json` (`{promptVersion, maxChars, docs:{docId: currentContentHash}}`):
+    the scorer needs every pooled doc's CURRENT hash to tell usable judgments from stale ones.
+  - nDCG's ideal ranking is built from all judged docs in the query's pool (union over variants), so variants
+    share one yardstick. Unjudged slots: no gain, never counted as grade 0 (off-topic@5 counts only judged zeros).
+  - Paired comparison (B - A): bootstrap CI on nDCG@k and P@5 plus sign test on any>=2@5 flips. Bootstrap uses a
+    seeded RNG (`--seed`, default 12345) so output is reproducible.
+  - Reading it: P@5 / any@5 measure WHICH docs are in the top 5, nDCG measures ORDER; a pure reordering moves
+    only nDCG. With n=4 queries the CI is an illustration, not evidence.
 
 ### Step 6. Label audit (manual, gates trust)
 - Script option `--sample 50`: prints a random 50 judged items (query, text, grade,

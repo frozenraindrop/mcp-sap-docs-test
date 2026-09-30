@@ -75,3 +75,9 @@ export function anyAtLeast(grades, k, minGrade) {
   for (let i = 0; i < Math.min(k, grades.length); i++) if (grades[i] != null && grades[i] >= minGrade) return true;
   return false;
 }
+
+// Small deterministic RNG (LCG) so scripted bootstrap output is reproducible run to run.
+export function seededRng(seed = 12345) {
+  let s = seed >>> 0;
+  return () => ((s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 2 ** 32);
+}

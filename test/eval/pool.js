@@ -221,6 +221,11 @@ async function main() {
     hydrated.set(d.id, { via, text: renderJudgeText({ ...d, content: content || d.snippet, maxChars }) });
   }
 
+  // The scorer needs each pooled doc's CURRENT content hash to tell usable judgments from stale ones
+  // (tasks.json only lists the pairs still to judge).
+  const docs = Object.fromEntries([...hydrated].map(([id, h]) => [id, hashContent(h.text)]));
+  writeFileSync(join(RUNS_DIR, "pool.json"), JSON.stringify({ promptVersion, maxChars, docs }, null, 2) + "\n");
+
   const entries = loadJudgments(JUDGMENTS_PATH);
   const tasks = buildTasks({ pool, queries, hydrated, entries, promptVersion });
   writeFileSync(TASKS_PATH, JSON.stringify({ promptVersion, maxChars, tasks }, null, 2) + "\n");
