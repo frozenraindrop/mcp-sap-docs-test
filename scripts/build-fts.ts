@@ -17,6 +17,7 @@ type Doc = {
   properties?: string[];
   events?: string[];
   aggregations?: string[];
+  parentDocument?: string;
 };
 
 type LibraryBundle = {
@@ -50,6 +51,7 @@ function main() {
   
   console.log(`📖 Reading index from ${SRC}...`);
   const raw = JSON.parse(fs.readFileSync(SRC, "utf8")) as Record<string, LibraryBundle>;
+
 
   console.log("Using MCP variant " + getVariantName() + " with " + ALLOWED_LIBRARY_IDS.size + " allowed library IDs.");
 
@@ -101,9 +103,9 @@ function main() {
         continue;
       }
       for (const d of lib.docs) {
-        // BM25 operates at document granularity — sections are the dense leg's
-        // unit (see build-embeddings.ts); indexing them here too would produce
-        // near-duplicate whole-doc + section hits that need deduping downstream.
+        // Canon: 1 physical document = 1 BM25 row, always — never split a
+        // page into per-section rows. The open design question is CONTENT
+        // (what goes into that one row), not granularity.
         if (d.type === "markdown-section") {
           continue;
         }

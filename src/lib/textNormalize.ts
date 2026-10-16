@@ -45,15 +45,27 @@ export function normalizeMarkdown(input: string | undefined | null, opts: Normal
     .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
 
-  // 4) Remaining structural markup → plain text.
+  // 4) Remaining structural markup → plain text. Blockquote markers strip
+  // BEFORE heading markers: a block-quoted heading like "> ### Note:" only
+  // exposes its "###" once the leading "> " is gone, so heading-stripping
+  // needs the later turn or it never sees a bare "#" at line start.
   t = t
-    .replace(/^\s{0,3}#{1,6}\s+/gm, "") // heading markers
     .replace(/^\s*>\s?/gm, "")          // blockquote markers
+    .replace(/^\s{0,3}#{1,6}\s+/gm, "") // heading markers
     .replace(/^\s*[-*+]\s+/gm, "")      // list bullets
     .replace(/\|/g, " ")                // table pipes
     .replace(/[*_~]+/g, "")             // emphasis / strikethrough
-    .replace(/\s+/g, " ")               // collapse whitespace
     .trim();
+
+  // 5) Raw HTML (many docs embed literal <table>/<span>/<td> markup for layout
+  // or styling — e.g. SAPUI5 release notes). Only for the prose/embedding path:
+  // keepCode:true callers may have genuine angle brackets in code/XML samples
+  // that must survive for lexical matching.
+  if (!keepCode) {
+    t = t.replace(/<[^>]+>/g, " ");
+  }
+
+  t = t.replace(/\s+/g, " ").trim(); // collapse whitespace (after all structural stripping)
 
   return maxChars > 0 ? t.slice(0, maxChars).trim() : t;
 }

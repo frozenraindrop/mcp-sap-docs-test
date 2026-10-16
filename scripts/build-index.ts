@@ -847,18 +847,30 @@ function extractJSDocInfo(content: string, fileName: string) {
   };
 }
 
-function extractMarkdownSections(content: string, lines: string[], src: any, relFile: string, docs: DocEntry[]) {
+function extractMarkdownSections(content: string, lines: string[], src: any, relFile: string, docs: DocEntry[], docTitle: string) {
   const sections: { title: string; content: string; startLine: number; level: number }[] = [];
   const usedSlugs = new Set<string>();
-  let currentSection: { title: string; content: string; startLine: number; level: number } | null = null;
-  
+  // Seed with an implicit leading section (docTitle, startLine 0) so any prose
+  // before the first heading has somewhere to accumulate. If the page starts
+  // right at a heading, this holder stays empty and is dropped below without
+  // ever entering `sections` — so it costs nothing in the common case, but
+  // prevents a genuine intro paragraph from being silently discarded (which
+  // would otherwise have zero embedding coverage now that the whole-doc
+  // vector is skipped for pages that have sections).
+  let currentSection: { title: string; content: string; startLine: number; level: number } | null = {
+    title: docTitle,
+    content: '',
+    startLine: 0,
+    level: 0
+  };
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    
+
     // Check for headings (##, ###, ####)
     let headingLevel = 0;
     let headingText = '';
-    
+
     if (line.startsWith('#### ')) {
       headingLevel = 4;
       headingText = line.slice(5).trim();
@@ -872,13 +884,14 @@ function extractMarkdownSections(content: string, lines: string[], src: any, rel
       headingLevel = 1;
       headingText = line.slice(2).trim();
     }
-    
+
     if (headingLevel > 0) {
-      // Save previous section if it exists
-      if (currentSection) {
+      // Save previous section only if it accumulated real content — drops the
+      // implicit leading holder silently when the page starts at a heading.
+      if (currentSection && currentSection.content.trim().length > 0) {
         sections.push(currentSection);
       }
-      
+
       // Start new section
       currentSection = {
         title: headingText,
@@ -891,18 +904,38 @@ function extractMarkdownSections(content: string, lines: string[], src: any, rel
       currentSection.content += line + '\n';
     }
   }
-  
+
   // Add the last section
-  if (currentSection) {
+  if (currentSection && currentSection.content.trim().length > 0) {
     sections.push(currentSection);
   }
-  
-  // Create separate docs entries for meaningful sections
-  for (const section of sections) {
-    // Skip very short sections or those with placeholder titles
-    if (section.content.trim().length < 100 || section.title.length < 3) {
-      continue;
+
+  // Create separate docs entries for meaningful sections. Track whether the
+  // page's "lead slot" (relaxed length floor) has been claimed yet — NOT by
+  // array position, because a page can open with a near-empty placeholder
+  // (e.g. a lone `<!-- loio... -->` tooling marker occupying sections[0])
+  // that must not consume the lead slot and starve the real short intro that
+  // follows it. The lead slot goes to the first section whose stripped
+  // content actually clears the relaxed floor.
+  let leadSlotClaimed = false;
+  sections.forEach((section) => {
+    // Measure length against HTML-comment-stripped content — many legacy pages
+    // (e.g. SAPUI5 release notes) open with only an internal `<!-- loio... -->`
+    // tooling marker before the first real heading. Left unstripped, that
+    // marker's raw character count can clear the length floor on its own,
+    // producing a section whose only "content" is a meaningless hex-id comment.
+    const meaningfulContent = section.content.replace(/<!--[\s\S]*?-->/g, '').trim();
+
+    // Skip very short sections or those with placeholder titles. The lead
+    // section is exempted from the length floor: it's whatever content came
+    // before the page's second heading (often just a short lead-in), and
+    // it's now the ONLY representation of that content in the dense leg,
+    // since the whole-doc embedding is skipped for pages that have sections.
+    const minLength = leadSlotClaimed ? 100 : 20;
+    if (meaningfulContent.length < minLength || section.title.length < 3) {
+      return;
     }
+    leadSlotClaimed = true;
     
     // Generate description from section content, excluding breadcrumb nav lines so the
     // caller doesn't receive raw markdown link syntax. Breadcrumb labels are still present
@@ -913,7 +946,7 @@ function extractMarkdownSections(content: string, lines: string[], src: any, rel
       src.id === '/sap-styleguides' &&
       /^\s*>/.test(l) &&
       (l.match(/\]\(#/g) ?? []).length >= 2;
-    const contentLines = section.content.split('\n').filter(l => l.trim() && !l.startsWith('#') && !isBreadcrumb(l));
+    const contentLines = meaningfulContent.split('\n').filter(l => l.trim() && !l.startsWith('#') && !isBreadcrumb(l));
     
     // Extract code blocks content for technical terms
     const codeBlocks = section.content.match(/```[\s\S]*?```/g) || [];
@@ -923,8 +956,16 @@ function extractMarkdownSections(content: string, lines: string[], src: any, rel
       .replace(/\s+/g, ' ')
       .trim();
     
-    // Combine description with code content for better indexing
-    let description = contentLines.slice(0, 3).join(' ').trim() || section.title;
+    // Clean the raw line-join through the shared normalizer — collapses markdown
+    // links to their anchor text, drops images/HTML/blockquote-bullet-table markup,
+    // so the description shown directly to the caller isn't raw, uncleaned markup
+    // (e.g. a bare `[text](https://...)` link or a literal `<table>...</table>`).
+    // Join with newlines (not spaces) so normalizeMarkdown's line-anchored
+    // regexes (heading/blockquote/bullet markers all match at line start) can
+    // still strip a block-quoted heading like "> ### Note:" correctly — its
+    // own final step collapses everything to single-line whitespace anyway.
+    const rawDescription = contentLines.slice(0, 3).join('\n').trim() || section.title;
+    let description = normalizeMarkdown(rawDescription, { keepCode: false }) || section.title;
     
     // Include important technical terms from code blocks (like annotation qualifiers)
     if (codeContent) {
@@ -959,7 +1000,7 @@ function extractMarkdownSections(content: string, lines: string[], src: any, rel
     // embedText: breadcrumb nav labels flow through normalizeMarkdown as plain text
     // (step 2 removed), giving the embedding leg hierarchy context without polluting
     // the description returned to callers. ~700 chars ≈ within MiniLM's 256-token budget.
-    const embedText = `${section.title}. ${normalizeMarkdown(section.content, { keepCode: false, maxChars: 700 })}`.trim();
+    const embedText = `${section.title}. ${normalizeMarkdown(meaningfulContent, { keepCode: false, maxChars: 700 })}`.trim();
 
     docs.push({
       id: sectionId,
@@ -973,7 +1014,7 @@ function extractMarkdownSections(content: string, lines: string[], src: any, rel
       sectionStartLine: section.startLine,
       headingLevel: section.level
     });
-  }
+  });
 }
 
 async function main() {
@@ -1100,7 +1141,7 @@ async function main() {
         // parent document entry below. Existing search/fetch clients rely on stable
         // whole-document IDs such as /cloud-sdk-js/guides/upgrade-to-version-4.
         if (content.includes('##')) {
-          extractMarkdownSections(content, lines, src, rel, docs);
+          extractMarkdownSections(content, lines, src, rel, docs, title);
         }
 
         // Push markdown doc with keywords

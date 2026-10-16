@@ -72,18 +72,31 @@ async function main() {
   console.log(`📖 Reading index from ${SRC}...`);
   const raw = JSON.parse(fs.readFileSync(SRC, "utf8")) as Record<string, LibraryBundle>;
 
-  // Filter: embed markdown, jsdoc, and markdown-section docs (not sample).
-  // markdown-section gives the dense leg per-topic granularity (it embeds each
-  // section's cleaned `embedText`); sample snippets stay excluded.
+  // A whole-doc row's embed text is just title + short intro excerpt + keywords —
+  // a poor summary of a multi-topic page, and once real per-section prose exists
+  // it only competes against (weaker) than the section vectors for the same
+  // content. So: skip the whole-doc embedding for any page that has sections;
+  // keep it only for pages with no sections, where it's the finest available unit.
+  const pagesWithSections = new Set<string>();
+  for (const lib of Object.values(raw)) {
+    for (const d of lib.docs) {
+      if (d.parentDocument) pagesWithSections.add(d.parentDocument);
+    }
+  }
+
+  // Filter: embed markdown-section and jsdoc always; embed markdown only when
+  // the page has no sections (not sample, which stays excluded either way).
   const docs: Doc[] = [];
   for (const lib of Object.values(raw)) {
     for (const d of lib.docs) {
-      if (d.type === "markdown" || d.type === "jsdoc" || d.type === "markdown-section") {
+      if (d.type === "markdown-section" || d.type === "jsdoc") {
+        docs.push(d);
+      } else if (d.type === "markdown" && !pagesWithSections.has(d.id)) {
         docs.push(d);
       }
     }
   }
-  console.log(`📄 Documents to embed: ${docs.length} (markdown + jsdoc + markdown-section)`);
+  console.log(`📄 Documents to embed: ${docs.length} (markdown [no-section pages only] + jsdoc + markdown-section)`);
 
   // Configure transformers to store model in dist/models/ (project-local, gitignored)
   fs.mkdirSync(MODELS_DIR, { recursive: true });
