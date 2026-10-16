@@ -1,0 +1,163 @@
+{
+  "timestamp": "2026-07-09T12:00:13.660Z",
+  "branch": "pr-0.90",
+  "query": "How do I integrate SAP Forms SO10 with Adobe Document Services for document generation",
+  "totalResults": 20,
+  "topResults": [
+    {
+      "position": 1,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "offline",
+      "sourceId": "dsag-abap-leitfaden",
+      "url": "/dsag-abap-leitfaden/forms/adobe-document-service",
+      "score": 0.05737704918032787,
+      "snippet": "Adobe Document Services\n\n{: .no_toc}\n\n/dsag-abap-leitfaden/forms/adobe-document-service"
+    },
+    {
+      "position": 2,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "offline",
+      "sourceId": "dsag-abap-leitfaden",
+      "url": "/dsag-abap-leitfaden/forms/form-technologies#sap-interactive-forms-by-adobe-2005-",
+      "score": 0.05303030303030303,
+      "snippet": "SAP Interactive Forms by Adobe (2005)\n\nLassen Sie sich von dem Teil „Interactive“ im Namen nicht täuschen – hierbei handelt es sich sehr wohl um „Druckformulare“ und nicht ausschließlich um interaktiv"
+    },
+    {
+      "position": 3,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "offline",
+      "sourceId": "dsag-abap-leitfaden",
+      "url": "/dsag-abap-leitfaden/forms/adobe-document-service#sap-forms-service-by-adobe-cloud-ads-",
+      "score": 0.05223880597014925,
+      "snippet": "SAP Forms Service by Adobe (Cloud-ADS)\n\n- Läuft als Service auf der SAP BTP (Cloud Foundry Environment) - Bereitstellung und Wartung durch SAP {: .note }\n\n/dsag-abap-leitfaden/forms/adobe-document-ser"
+    },
+    {
+      "position": 4,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "offline",
+      "sourceId": "dsag-abap-leitfaden",
+      "url": "/dsag-abap-leitfaden/forms/form-technologies#sap-s-4hana-forms-2015-s-4hana-",
+      "score": 0.04838709677419355,
+      "snippet": "SAP S/4HANA Forms (2015 S/4HANA)\n\nGrundlage sind Adobe Formulare mit Gateway-Schnittstellen, deren Datenbeschaffung mittels Gateway-Services (also keine klassischen Druckprogramme) erfolgt. Die Pflege"
+    },
+    {
+      "position": 5,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "offline",
+      "sourceId": "abap-platform-reuse-services",
+      "url": "/abap-platform-reuse-services/README#adobe-forms-service",
+      "score": 0.040634920634920635,
+      "snippet": "Adobe Forms Service\n\n1. Create a new Salesorder 2.  Select a customer 3.  Create an Item\n\n/abap-platform-reuse-services/README#adobe-forms-service"
+    },
+    {
+      "position": 6,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/Product_Quotation_and_Underwriting_Management/cb982ba68d8b4a8181e63b611c7578ab/2a6365a940ae4e1ba159e85916b78cec.html?locale=en-US&state=PRODUCTION&version=2025.0.00.1",
+      "score": 0.036885245901639344,
+      "snippet": "Enabling the Adobe Documents Service\n\nEnabling the <b>Adobe</b> <b>Documents</b> <b>Service</b>\nThe FS-QUO quote letter <b>generation</b> feature requires access to\nan <b>Adobe</b> <b>Documents</b> <b"
+    },
+    {
+      "position": 7,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/SAP_NETWEAVER_731/5cb5ae1ec9624cd5a9a08d860ca127de/e39fb3e479b4423eb0e9b9c9dbf7a49f.html?locale=en-US&state=PRODUCTION&version=7.31.33",
+      "score": 0.036290322580645164,
+      "snippet": "Integrate Online Interactive Forms by Adobe (Optional)\n\nInstallation and Configuration Requirements\n\n\n\t\n<b>Adobe</b> <b>Document</b> <b>Services</b> are installed and configured on the server AS Java."
+    },
+    {
+      "position": 8,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "offline",
+      "sourceId": "btp-cloud-platform",
+      "url": "/btp-cloud-platform/30-development/rap-data-services-for-print-forms-a104660",
+      "score": 0.03611111111111111,
+      "snippet": "RAP Data Services for Print Forms\n\n<!-- loioa104660468324090b601ee2969a54d99 -->\n\n/btp-cloud-platform/30-development/rap-data-services-for-print-forms-a104660"
+    },
+    {
+      "position": 9,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/7113856e409647838af7891e1429b807/ea8cca720d9f49608a967de8f8240734.html?locale=en-US&state=PRODUCTION&version=2025.001",
+      "score": 0.03571428571428571,
+      "snippet": "FND, SAP Document Builder\n\nIf you want to <b>integrate</b> <b>Adobe</b> <b>forms</b>, you must install the <b>SAP</b> NetWeaver-based <b>Adobe</b> LiveCycle Designer. ... If you want to combine PDF <b"
+    },
+    {
+      "position": 10,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/Product_Quotation_and_Underwriting_Management/cb982ba68d8b4a8181e63b611c7578ab/a9f0a9800c194e9498afb0b7dd512b07.html?locale=en-US&state=PRODUCTION&version=2025.0.00.1",
+      "score": 0.03515625,
+      "snippet": "Application > AuthoritySuite > Env > Adobe Documents Service Connection\n\nApplication&nbsp;&nbsp;AuthoritySuite&nbsp;&nbsp;Env&nbsp;&nbsp;<b>Adobe</b> <b>Documents</b> <b>Service</b> Connection\n\nThese "
+    },
+    {
+      "position": 11,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/4b1fd73574422594e10000000a42189b.html?locale=en-US&state=PRODUCTION&version=2023.latest",
+      "score": 0.03461538461538462,
+      "snippet": "Assembly Implementation\n\n<b>Document</b> <b>Services</b> (ADS) provides <b>form</b> design and <b>generation</b> capabilities and is part of <b>SAP</b> NetWeaver. ... PDF <b>Generator</b> ES\n\n\tSupport"
+    },
+    {
+      "position": 12,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/SAP_NETWEAVER_702/fe1456b96c551014b654de2ef84d87bd/2bd926184b8a11d1894c0000e8323c4f.html?locale=en-US&state=PRODUCTION&version=7.02.26",
+      "score": 0.034090909090909095,
+      "snippet": "Authorizations in SAPconnect\n\nThe authorizations <b>for</b> the <b>service</b> user are contained in the profile S_A. SCON . ... , SO03 - SO07, SO09, <b>SO12</b>, <b>SO13</b>, <b>SO15</b>, SOAD, SOCP,"
+    },
+    {
+      "position": 13,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/SAP_ERP/b15e09bc731547e5bce9ba9d45465147/2c07a302df8749a8a3c4c82721b1a889.html?locale=en-US&state=PRODUCTION&version=6.18.latest",
+      "score": 0.033582089552238806,
+      "snippet": "Specifying Output Forms for PDF Generation\n\nSpecifying Output <b>Forms</b> <b>for</b> PDF <b>Generation</b>\nYou want to specify your own output <b>form</b> <b>for</b> the PDF <b>generation</b> of elec"
+    },
+    {
+      "position": 14,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/SAP_ERP/b15e09bc731547e5bce9ba9d45465147/46c6cefc6c7f4eb6b67a3da501f0418e.html?locale=en-US&state=PRODUCTION&version=6.18.latest",
+      "score": 0.03308823529411765,
+      "snippet": "Specifying Output Forms for PDF Generation\n\nSpecifying Output <b>Forms</b> <b>for</b> PDF <b>Generation</b>\nYou want to specify your own output <b>form</b> <b>for</b> the PDF <b>generation</b> of elec"
+    },
+    {
+      "position": 15,
+      "isWiki": false,
+      "title": "Untitled",
+      "sourceKind": "sap_help",
+      "sourceId": "sap-help",
+      "url": "https://help.sap.com/docs/Product_Quotation_and_Underwriting_Management/cb982ba68d8b4a8181e63b611c7578ab/bb3be9bf61a64a3cbc693d45aa3f7ce1.html?locale=en-US&state=PRODUCTION&version=2025.0.00.1",
+      "score": 0.03260869565217392,
+      "snippet": "Configuring the Document Storage System\n\nEnabling the <b>Adobe</b> <b>Documents</b> <b>Service</b>\nThe FS-QUO quote letter <b>generation</b> feature requires access to\nan <b>Adobe</b> <b>Documents</b>"
+    }
+  ],
+  "summary": {
+    "wikiCount": 0,
+    "officialCount": 15,
+    "firstWikiPosition": null
+  }
+}

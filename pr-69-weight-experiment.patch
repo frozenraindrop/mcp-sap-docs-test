@@ -1,0 +1,13 @@
+diff --git a/src/lib/search.ts b/src/lib/search.ts
+index 0ee06d4..f13a2a8 100644
+--- a/src/lib/search.ts
++++ b/src/lib/search.ts
+@@ -84,7 +84,7 @@ const SUPPORT_CONTENT_PRODUCT = "SUPPORT_CONTENT";
+ const SUPPORT_CONTENT_VERSION = "1.0";
+ // Internal auxiliary leg weight: old SAPWiki-style Support Content is useful, but deliberately
+ // secondary and still returned as normal SAP Help (`sourceKind: "sap_help"`).
+-const SUPPORT_CONTENT_RRF_WEIGHT = 0.65;
++const SUPPORT_CONTENT_RRF_WEIGHT = 1.0;  // Test: equal to regular SAP Help weight
+ 
+ /**
+  * Reciprocal Rank Fusion scoring

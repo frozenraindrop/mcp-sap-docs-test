@@ -1,0 +1,470 @@
+{
+  "timestamp": "2026-07-09T10:41:36.292Z",
+  "methodology": "Search results comparison + content analysis",
+  "testCases": [
+    {
+      "query": "How do I integrate SAP Forms (SO10) with Adobe Document Services",
+      "context": "Practical integration pattern - exactly what wiki excels at",
+      "expectedBenefit": "SUPPORT_CONTENT should have hands-on SO10+ADS workflow examples",
+      "mainBranch": {
+        "query": "How do I integrate SAP Forms (SO10) with Adobe Document Services",
+        "branch": "main",
+        "totalResults": 15,
+        "officialSapHelpCount": 8,
+        "supportContentCount": 2,
+        "officialTopResults": [
+          {
+            "id": "sap-help-e39fb3e479b4423eb0e9b9c9dbf7a49f",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_NETWEAVER_731/5cb5ae1ec9624cd5a9a08d860ca127de/e39fb3e479b4423eb0e9b9c9dbf7a49f.html?locale=en-US&state=PRODUCTION&version=7.31.33",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Integrate Online Interactive Forms by Adobe (Optional)\n\nWhich UI elements can <b>I</b> <b>integrate</b> into an interactive <b>form</b>? ... Installation and Configuration Requirements\n\n\n\t\n<b>Adobe</b> <b>Document</b> <b>Services</b> are installed and configured on the server AS Java. ... Otherwise, you must change the destination URL of the <b>Adobe</b> <b>document</b> <b>services</b>.\n\n\n\t\nThe design time tool <b>Adobe</b> LiveCycle Designer is installed on your front end. ...  — Product: SAP N",
+            "score": 0.03571428571428571
+          },
+          {
+            "id": "sap-help-2bd926184b8a11d1894c0000e8323c4f",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_NETWEAVER_702/fe1456b96c551014b654de2ef84d87bd/2bd926184b8a11d1894c0000e8323c4f.html?locale=en-US&state=PRODUCTION&version=7.02.26",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Authorizations in SAPconnect\n\nThe authorizations <b>for</b> the <b>service</b> user are contained in the profile S_A. SCON . ... , SO03 - SO07, SO09, <b>SO12</b>, <b>SO13</b>, <b>SO15</b>, SOAD, SOCP, SODS\n\n\n\n\n\n\n\nAuthorizations <b>for</b> SAPconnect administrators\n\n The SAPconnect administrator requires the authorizations <b>for</b> the RFC user and the authorizations ... These authorizations are contained in the following roles:\n\n\t <b>SAP</b> _BC_ SRV _COM_ADMIN\n\n\n\t <b>SAP</b> _BC_ SRV _ GBT _A",
+            "score": 0.03515625
+          },
+          {
+            "id": "sap-help-b938bf9cdaf74b15ac24acee26d3d49b",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/ABAP_PLATFORM_NEW/026f8a31bca948a086e995ce267f4e38/b938bf9cdaf74b15ac24acee26d3d49b.html?locale=en-US&state=PRODUCTION&version=202510.001",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Authorizations in SAPconnect\n\nThe authorizations <b>for</b> the <b>service</b> user are contained in the profile S_A.SCON. ... , SO03 - SO07, SO09, <b>SO12</b>, <b>SO13</b>, <b>SO15</b>, SOAD, SOCP, SODS\n\n\n\n\n\n\n\n\nAuthorizations <b>for</b> SAPconnect administrators\n\n\nThe SAPconnect administrator requires the authorizations <b>for</b> the RFC user and the authorizations ... Authorizations in SAPconnect\n\nFeatures\n\n\n\nAuthorizations <b>for</b> <b>Service</b> Users\n\n\nSpecial authorizations are required",
+            "score": 0.03461538461538462
+          }
+        ],
+        "supportContentResults": [
+          {
+            "id": "sap-help-3362959736",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SUPPORT_CONTENT/basis/3362959736.html?locale=en-US&state=PRODUCTION&version=1.0",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "TCodes for SAPoffice\n\nTCodes <b>for</b> SAPoffice\n<b>SO01</b>&nbsp;- SAPoffice: Inbox\n\nSO02 - SAPoffice: Outbox\n SO03 - SAPoffice: Private Folders\n SO04 - SAPoffice: Shared Folders\n SO05 -\n  SAPoffice: Private Trash\n SO06 - SAPoffice: Substitutionon ... <b>SO17</b> - SAPoffice: Delete Shared Trash\n <b>SO18</b> - SAPoffice: Shared\n  Trash\n <b>SO19</b>&nbsp;- SAPoffice: Default <b>Documents</b>\n SO21 - Maintain PC Work Directory\n SO22 - SAPoffice: Delete\n  PC Temp. ... SO99 - Put Information Syste",
+            "score": 0.036885245901639344
+          },
+          {
+            "id": "sap-help-3354611551",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SUPPORT_CONTENT/basis/3354611551.html?locale=en-US&state=PRODUCTION&version=1.0",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Some More Transactions 1.2\n\nSAPoffice: Delete Shared Trash\n<b>SO18</b> SAPoffice: Shared Trash\n<b>SO19</b> SAPoffice: Default <b>Documents</b>\nSO21 Maintain\n  PC Work Directory\nSO22 SAPoffice: Delete PC Temp. ... SO99 Put Information System\n<b>SOA0</b> ArchiveLink Workflow <b>document</b>\n  types\nSOBJ Attribute Maintenance Objects\nSOLE OLE Applications\nSOLI Load OLE type info\nSOPE Exclude\n  <b>Document</b> Classes\nSOTD SAPoffice: Maintain ... <b>SAP</b> Electronic Parcel <b>Service</b>\nSERP Repo",
+            "score": 0.036290322580645164
+          }
+        ],
+        "allResults": [
+          {
+            "id": "/dsag-abap-leitfaden/forms/adobe-document-service",
+            "title": "Untitled",
+            "url": "/dsag-abap-leitfaden/forms/adobe-document-service",
+            "sourceKind": "offline",
+            "sourceId": "dsag-abap-leitfaden",
+            "snippet": "Adobe Document Services\n\n{: .no_toc}\n\n/dsag-abap-leitfaden/forms/adobe-document-service",
+            "score": 0.04838709677419355
+          },
+          {
+            "id": "/dsag-abap-leitfaden/forms/form-technologies#sap-interactive-forms-by-adobe-2005-",
+            "title": "Untitled",
+            "url": "/dsag-abap-leitfaden/forms/form-technologies#sap-interactive-forms-by-adobe-2005-",
+            "sourceKind": "offline",
+            "sourceId": "dsag-abap-leitfaden",
+            "snippet": "SAP Interactive Forms by Adobe (2005)\n\nLassen Sie sich von dem Teil „Interactive“ im Namen nicht täuschen – hierbei handelt es sich sehr wohl um „Druckformulare“ und nicht ausschließlich um interaktive Formulare.   Das Formularlayout wird mittels LiveCycle Designer (LCD von Adobe) in der Transaktion SFP gestaltet. Der LCD muss dafür im S...\n\n/dsag-abap-leitfaden/forms/form-technologies#sap-interactive-forms-by-adobe-2005-",
+            "score": 0.045454545454545456
+          },
+          {
+            "id": "/dsag-abap-leitfaden/forms/adobe-document-service#sap-forms-service-by-adobe-cloud-ads-",
+            "title": "Untitled",
+            "url": "/dsag-abap-leitfaden/forms/adobe-document-service#sap-forms-service-by-adobe-cloud-ads-",
+            "sourceKind": "offline",
+            "sourceId": "dsag-abap-leitfaden",
+            "snippet": "SAP Forms Service by Adobe (Cloud-ADS)\n\n- Läuft als Service auf der SAP BTP (Cloud Foundry Environment) - Bereitstellung und Wartung durch SAP {: .note }\n\n/dsag-abap-leitfaden/forms/adobe-document-service#sap-forms-service-by-adobe-cloud-ads-",
+            "score": 0.04477611940298507
+          },
+          {
+            "id": "/dsag-abap-leitfaden/forms/form-technologies#sap-s-4hana-forms-2015-s-4hana-",
+            "title": "Untitled",
+            "url": "/dsag-abap-leitfaden/forms/form-technologies#sap-s-4hana-forms-2015-s-4hana-",
+            "sourceKind": "offline",
+            "sourceId": "dsag-abap-leitfaden",
+            "snippet": "SAP S/4HANA Forms (2015 S/4HANA)\n\nGrundlage sind Adobe Formulare mit Gateway-Schnittstellen, deren Datenbeschaffung mittels Gateway-Services (also keine klassischen Druckprogramme) erfolgt. Die Pflege erfolgt mit Fiori Apps und somit sind “SAP S/4HANA Forms” public-cloud-fähig. Das Layout wird ebenfalls mit dem LiveCycle Designer, j...\n\n/dsag-abap-leitfaden/forms/form-technologies#sap-s-4hana-forms-2015-s-4hana-",
+            "score": 0.04098360655737705
+          },
+          {
+            "id": "sap-help-3362959736",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SUPPORT_CONTENT/basis/3362959736.html?locale=en-US&state=PRODUCTION&version=1.0",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "TCodes for SAPoffice\n\nTCodes <b>for</b> SAPoffice\n<b>SO01</b>&nbsp;- SAPoffice: Inbox\n\nSO02 - SAPoffice: Outbox\n SO03 - SAPoffice: Private Folders\n SO04 - SAPoffice: Shared Folders\n SO05 -\n  SAPoffice: Private Trash\n SO06 - SAPoffice: Substitutionon ... <b>SO17</b> - SAPoffice: Delete Shared Trash\n <b>SO18</b> - SAPoffice: Shared\n  Trash\n <b>SO19</b>&nbsp;- SAPoffice: Default <b>Documents</b>\n SO21 - Maintain PC Work Directory\n SO22 - SAPoffice: Delete\n  PC Temp. ... SO99 - Put Information Syste",
+            "score": 0.036885245901639344
+          },
+          {
+            "id": "sap-help-3354611551",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SUPPORT_CONTENT/basis/3354611551.html?locale=en-US&state=PRODUCTION&version=1.0",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Some More Transactions 1.2\n\nSAPoffice: Delete Shared Trash\n<b>SO18</b> SAPoffice: Shared Trash\n<b>SO19</b> SAPoffice: Default <b>Documents</b>\nSO21 Maintain\n  PC Work Directory\nSO22 SAPoffice: Delete PC Temp. ... SO99 Put Information System\n<b>SOA0</b> ArchiveLink Workflow <b>document</b>\n  types\nSOBJ Attribute Maintenance Objects\nSOLE OLE Applications\nSOLI Load OLE type info\nSOPE Exclude\n  <b>Document</b> Classes\nSOTD SAPoffice: Maintain ... <b>SAP</b> Electronic Parcel <b>Service</b>\nSERP Repo",
+            "score": 0.036290322580645164
+          },
+          {
+            "id": "sap-help-e39fb3e479b4423eb0e9b9c9dbf7a49f",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_NETWEAVER_731/5cb5ae1ec9624cd5a9a08d860ca127de/e39fb3e479b4423eb0e9b9c9dbf7a49f.html?locale=en-US&state=PRODUCTION&version=7.31.33",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Integrate Online Interactive Forms by Adobe (Optional)\n\nWhich UI elements can <b>I</b> <b>integrate</b> into an interactive <b>form</b>? ... Installation and Configuration Requirements\n\n\n\t\n<b>Adobe</b> <b>Document</b> <b>Services</b> are installed and configured on the server AS Java. ... Otherwise, you must change the destination URL of the <b>Adobe</b> <b>document</b> <b>services</b>.\n\n\n\t\nThe design time tool <b>Adobe</b> LiveCycle Designer is installed on your front end. ...  — Product: SAP N",
+            "score": 0.03571428571428571
+          },
+          {
+            "id": "sap-help-2bd926184b8a11d1894c0000e8323c4f",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_NETWEAVER_702/fe1456b96c551014b654de2ef84d87bd/2bd926184b8a11d1894c0000e8323c4f.html?locale=en-US&state=PRODUCTION&version=7.02.26",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Authorizations in SAPconnect\n\nThe authorizations <b>for</b> the <b>service</b> user are contained in the profile S_A. SCON . ... , SO03 - SO07, SO09, <b>SO12</b>, <b>SO13</b>, <b>SO15</b>, SOAD, SOCP, SODS\n\n\n\n\n\n\n\nAuthorizations <b>for</b> SAPconnect administrators\n\n The SAPconnect administrator requires the authorizations <b>for</b> the RFC user and the authorizations ... These authorizations are contained in the following roles:\n\n\t <b>SAP</b> _BC_ SRV _COM_ADMIN\n\n\n\t <b>SAP</b> _BC_ SRV _ GBT _A",
+            "score": 0.03515625
+          },
+          {
+            "id": "sap-help-b938bf9cdaf74b15ac24acee26d3d49b",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/ABAP_PLATFORM_NEW/026f8a31bca948a086e995ce267f4e38/b938bf9cdaf74b15ac24acee26d3d49b.html?locale=en-US&state=PRODUCTION&version=202510.001",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Authorizations in SAPconnect\n\nThe authorizations <b>for</b> the <b>service</b> user are contained in the profile S_A.SCON. ... , SO03 - SO07, SO09, <b>SO12</b>, <b>SO13</b>, <b>SO15</b>, SOAD, SOCP, SODS\n\n\n\n\n\n\n\n\nAuthorizations <b>for</b> SAPconnect administrators\n\n\nThe SAPconnect administrator requires the authorizations <b>for</b> the RFC user and the authorizations ... Authorizations in SAPconnect\n\nFeatures\n\n\n\nAuthorizations <b>for</b> <b>Service</b> Users\n\n\nSpecial authorizations are required",
+            "score": 0.03461538461538462
+          },
+          {
+            "id": "sap-help-fc15ce3eb3ea4720961c29005f7fb07f",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/ABAP_PLATFORM_NEW/e0e3d14ea0214efc82251725ba84c4a1/fc15ce3eb3ea4720961c29005f7fb07f.html?locale=en-US&state=PRODUCTION&version=202510.001",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Providing Adobe Layout Technology for Form Processing\n\nMore information:\n  <b>Adobe</b> <b>Document</b> <b>Services</b> <b>for</b> <b>Form</b> Processing - Complete configuration guide \n A printable version of the configuration guide is on <b>SAP</b> <b>Service</b> Marketplace at service.sap.com/<b>adobe</b>&nbsp;&nbsp;Media ... You must install this software on your PC and make settings <b>for</b> <b>Adobe</b> <b>Document</b> <b>Services</b>. ... Availability \n\n<b>SAP</b> supports <b>integratio",
+            "score": 0.034090909090909095
+          }
+        ]
+      },
+      "prBranch": null,
+      "analysis": {
+        "officialDocsAvailable": true,
+        "supportContentAvailable": true,
+        "topDocsFromBothSources": {
+          "official": [
+            "Untitled",
+            "Untitled",
+            "Untitled"
+          ],
+          "support": [
+            "Untitled",
+            "Untitled"
+          ]
+        }
+      }
+    },
+    {
+      "query": "RAP behavior implementation for managed entities - what are the key steps",
+      "context": "Implementation guide - needs practical examples beyond API docs",
+      "expectedBenefit": "SUPPORT_CONTENT should have concrete BDEF pattern examples",
+      "mainBranch": {
+        "query": "RAP behavior implementation for managed entities - what are the key steps",
+        "branch": "main",
+        "totalResults": 15,
+        "officialSapHelpCount": 3,
+        "supportContentCount": 0,
+        "officialTopResults": [
+          {
+            "id": "sap-help-9114469bff7a4c9a8e407a9b217e31ab",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/ABAP_Cloud/f055b8bf582d4f34b91da667bc1fcce6/92f62bb393414b4d9b30653e070d2530.html?locale=en-US&state=PRODUCTION&version=sap_cross_product_abap#loio9114469bff7a4c9a8e407a9b217e31ab",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Managed Internal Early Numbering\n\nNote\n\n<b>Managed</b> early numbering is only possible for <b>key</b>\nfields with ABAP type <b>raw</b>(16) (UUID) of BOs with <b>implementation</b> type <b>managed</b>. ... Unmanaged Early Numbering in <b>Managed</b> and Unmanaged <b>Implementation</b> Scenarios with Draft Capabilities\n\n\nEarly numbering is defined in the <b>behavior</b> definition on <b>entity</b> level and the <b>key</b>\nassignment is <b>implemented</b> ... [<b>implementation</b>] <b>managed</b>",
+            "score": 0.036885245901639344
+          },
+          {
+            "id": "sap-help-aaaa460e6ae0446a9c8e9b0200fd8747",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/ABAP_Cloud/f055b8bf582d4f34b91da667bc1fcce6/92f62bb393414b4d9b30653e070d2530.html?locale=en-US&state=PRODUCTION&version=sap_cross_product_abap#loioaaaa460e6ae0446a9c8e9b0200fd8747",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Unmanaged Internal Early Numbering\n\nNote\n\n<b>Managed</b> early numbering is only possible for <b>key</b>\nfields with ABAP type <b>raw</b>(16) (UUID) of BOs with <b>implementation</b> type <b>managed</b>. ... Unmanaged Early Numbering in <b>Managed</b> and Unmanaged <b>Implementation</b> Scenarios with Draft Capabilities\n\n\nEarly numbering is defined in the <b>behavior</b> definition on <b>entity</b> level and the <b>key</b>\nassignment is <b>implemented</b> ... [<b>implementation</b>] <b>managed</",
+            "score": 0.036290322580645164
+          },
+          {
+            "id": "sap-help-92f62bb393414b4d9b30653e070d2530",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/ABAP_Cloud/f055b8bf582d4f34b91da667bc1fcce6/92f62bb393414b4d9b30653e070d2530.html?locale=en-US&state=PRODUCTION&version=sap_cross_product_abap",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Internal Early Numbering\n\nNote\n\n<b>Managed</b> early numbering is only possible for <b>key</b>\nfields with ABAP type <b>raw</b>(16) (UUID) of BOs with <b>implementation</b> type <b>managed</b>. ... Unmanaged Early Numbering in <b>Managed</b> and Unmanaged <b>Implementation</b> Scenarios with Draft Capabilities\n\n\nEarly numbering is defined in the <b>behavior</b> definition on <b>entity</b> level and the <b>key</b>\nassignment is <b>implemented</b> ... [<b>implementation</b>] <b>managed</b> [<b>imp",
+            "score": 0.03571428571428571
+          }
+        ],
+        "supportContentResults": [],
+        "allResults": [
+          {
+            "id": "/abap-docs-standard/ABENMANAGED_RAP_BO_GLOSRY",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENMANAGED_RAP_BO_GLOSRY",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENMANAGED_RAP_BO_GLOSRY\n\nManaged RAP BO for short. A provisioning type of the [business object behavior](ABENRAP_BO_BEHAVIOR_GLOSRY.html) of a [RAP BO](ABENRAP_BO_GLOSRY.html). The [transactional buffer](ABENTRANSACTIONAL_BUFFER_GLOSRY.html) of a managed RAP BO is provided by the [managed RAP BO provider](ABENMANAGED_RAP_BO_PROV_GLOSRY.html). The implementation can partly be provided by an [unmanaged RAP BO provider](ABEN\n\n/abap-docs-standard/ABENMANAGED_RAP_BO_GLOSRY",
+            "score": 0.04923076923076924
+          },
+          {
+            "id": "/abap-docs-standard/ABENBDL_RAP_BO",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENBDL_RAP_BO",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENBDL_RAP_BO\n\nRAP business objects of the [implementation types](ABENCDS_BDEF_IMPL_TYPE_GLOSRY.html)\\\\ `managed` and `unmanaged` are realized through the same set of keywords. These keywords are listed in the following sections, structured by their position within the behavior definition. Some keywords are used differently in managed and unmanaged RAP BOs, or they are handled by the RAP framework in managed sce\n\n/abap-docs-standard/ABENBDL_RAP_BO",
+            "score": 0.04918032786885246
+          },
+          {
+            "id": "/abap-docs-standard/ABAPMODIFY_ENTITY_ENTITIES_OP",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABAPMODIFY_ENTITY_ENTITIES_OP",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABAPMODIFY_ENTITY_ENTITIES_OP\n\nThe EML `MODIFY` statement supports the following operations: In both, managed and unmanaged implementations, all modify operations must be specified in the [RAP behavior definition](ABENCDS_BEHAVIOR_DEFINITION_GLOSRY.html). See more details in the BDL documentation: [`Define Behavior, Standard Operations`](ABENBDL_STANDARD_OPERATIONS.html). All nonstandard operations (actions) must be user-implem\n\n/abap-docs-standard/ABAPMODIFY_ENTITY_ENTITIES_OP",
+            "score": 0.04838709677419355
+          },
+          {
+            "id": "/abap-docs-standard/ABENEML_SET_ENTITIES_ABEXA",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENEML_SET_ENTITIES_ABEXA",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENEML_SET_ENTITIES_ABEXA\n\nThis example demonstrates the `SET ENTITIES` statements with a managed RAP BO. Note that this example produces a short dump. The CDS data model consists of the root entity `DEMO_ROOT_M`: **Behavior definition**\n\n/abap-docs-standard/ABENEML_SET_ENTITIES_ABEXA",
+            "score": 0.047619047619047616
+          },
+          {
+            "id": "/abap-cheat-sheets/36_RAP_Behavior_Definition_Language#more-information",
+            "title": "Untitled",
+            "url": "/abap-cheat-sheets/36_RAP_Behavior_Definition_Language#more-information",
+            "sourceKind": "offline",
+            "sourceId": "abap-cheat-sheets",
+            "snippet": "More Information\n\n- [Development guide for the ABAP RESTful Application Programming Model](https://help.sap.com/docs/abap-cloud/abap-rap/abap-restful-application-programming-model) - ABAP Keyword Documentation:   - [RAP BDL](https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/ABENBDL.html)\n\n/abap-cheat-sheets/36_RAP_Behavior_Definition_Language#more-information",
+            "score": 0.04620253164556962
+          },
+          {
+            "id": "/abap-docs-standard/ABENDERIVED_TYPES_KEY_ABEXA",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENDERIVED_TYPES_KEY_ABEXA",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENDERIVED_TYPES_KEY_ABEXA\n\nThis example demonstrates the use of `%key` with a [managed](ABENBDL_IMPL_TYPE.html)\\\\ [RAP BO](ABENRAP_BO_GLOSRY.html) in the [RAP interaction phase](ABENRAP_INT_PHASE_GLOSRY.html). The CDS data model consists of the root entity `DEMO_MANAGED_ROOT_4` and its child entity `DEMO_MANAGED_CHILD_4`. The child entity is not used in the example. **Behavior definition**\n\n/abap-docs-standard/ABENDERIVED_TYPES_KEY_ABEXA",
+            "score": 0.045454545454545456
+          },
+          {
+            "id": "/abap-cheat-sheets/17_SAP_LUW#more-information",
+            "title": "Untitled",
+            "url": "/abap-cheat-sheets/17_SAP_LUW#more-information",
+            "sourceKind": "offline",
+            "sourceId": "abap-cheat-sheets",
+            "snippet": "More Information\n\n- [The RAP Transactional Model and the SAP LUW](https://help.sap.com/docs/SAP_S4HANA_CLOUD/e5522a8a7b174979913c99268bc03f1a/ccda1094b0f845e28b88f9f50a68dfc4.html) (Development guide for the ABAP RESTful Application Programming Model) - [SAP LUW in the ABAP Keyword Documentation](https://help.sap.com...\n\n/abap-cheat-sheets/17_SAP_LUW#more-information",
+            "score": 0.04451219512195122
+          },
+          {
+            "id": "/abap-docs-standard/ABENCOMMIT_ENTITIES_BEGINEND_ABEXA",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENCOMMIT_ENTITIES_BEGINEND_ABEXA",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENCOMMIT_ENTITIES_BEGINEND_ABEXA\n\nThis example demonstrates the `COMMIT ENTITIES` variant `COMMIT ENTITIES ... END` including `CONVERT KEY OF` with a simple [unmanaged RAP BO](ABENUNMANAGED_RAP_BO_GLOSRY.html). The CDS data model consists of the root entity `DEMO_UMANAGED_ROOT_LATE_NUM`. **Behavior definition**\n\n/abap-docs-standard/ABENCOMMIT_ENTITIES_BEGINEND_ABEXA",
+            "score": 0.04285714285714286
+          },
+          {
+            "id": "/abap-docs-standard/ABENRAP_GLOSSARY",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENRAP_GLOSSARY",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENRAP_GLOSSARY\n\nRAP stands for the [ABAP RESTful Application Programming Model](ABENARAP_GLOSRY.html). In the following, terms of the [ABAP Glossary](ABENABAP_GLOSSARY.html) are listed, that are relevant for RAP. **ABAP behavior pool** ABP for short. A special [class pool](ABENCLASS_POOL_GLOSRY.html) for an [ABAP behavior implementation](ABENBEHAVIOR_IMPLEMENT_GLOSRY.html). A behavior pool is based on a [RAP beha\n\n/abap-docs-standard/ABENRAP_GLOSSARY",
+            "score": 0.04054054054054054
+          },
+          {
+            "id": "/abap-docs-standard/ABENRAP_BO_PROVIDER_GLOSRY",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENRAP_BO_PROVIDER_GLOSRY",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENRAP_BO_PROVIDER_GLOSRY\n\nA piece of software that provides the [transactional buffer](ABENTRANSACTIONAL_BUFFER_GLOSRY.html) and the implementation of a [RAP BO](ABENRAP_BO_GLOSRY.html) based on its [RAP behavior definition](ABENCDS_BEHAVIOR_DEFINITION_GLOSRY.html). -   A [managed RAP BO](ABENMANAGED_RAP_BO_GLOSRY.html) is provided fully or partly by the [managed RAP BO provider](ABENMANAGED_RAP_BO_PROV_GLOSRY.html). -   A\n\n/abap-docs-standard/ABENRAP_BO_PROVIDER_GLOSRY",
+            "score": 0.03970588235294118
+          }
+        ]
+      },
+      "prBranch": null,
+      "analysis": {
+        "officialDocsAvailable": true,
+        "supportContentAvailable": false,
+        "topDocsFromBothSources": {
+          "official": [
+            "Untitled",
+            "Untitled",
+            "Untitled"
+          ],
+          "support": []
+        }
+      }
+    },
+    {
+      "query": "How to configure document splitting in SAP S/4HANA",
+      "context": "Configuration guide - practical how-to",
+      "expectedBenefit": "SUPPORT_CONTENT should have step-by-step FI config guides",
+      "mainBranch": {
+        "query": "How to configure document splitting in SAP S/4HANA",
+        "branch": "main",
+        "totalResults": 15,
+        "officialSapHelpCount": 10,
+        "supportContentCount": 0,
+        "officialTopResults": [
+          {
+            "id": "sap-help-728efdb65e774398825a4064c443db9a",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/728efdb65e774398825a4064c443db9a.html?locale=en-US&state=PRODUCTION&version=2025.001",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Subsequent Implementation of Document Splitting\n\nin <b>SAP</b> <b>S</b>/<b>4HANA</b> is based on the concept\nof the former &ldquo;New GL&rdquo;. ... In <b>SAP</b>\n<b>S</b>/<b>4HANA</b>, the activation of <b>document</b> <b>splitting</b> is time-dependent\nand you can, therefore, implement it without system downtime. ... Subsequent Implementation of <b>Document</b> <b>Splitting</b>\nWithin the scope of the Subsequent Implementation of <b>Document</b> <b>Splitting</b>,\n<b>SAP</b> <b>S</b>/<b>4HANA</",
+            "score": 0.036885245901639344
+          },
+          {
+            "id": "sap-help-27773e5e134645a08fcc1bc424afd0b4",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/4c6c3c99e6e94a92a626f424add61cba/27773e5e134645a08fcc1bc424afd0b4.html?locale=en-US&state=PRODUCTION&version=100",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Subsequent Implementation of Document Splitting\n\nIn <b>SAP</b>\n<b>S</b>/<b>4HANA</b>, the activation of <b>document</b> <b>splitting</b> is\ntime-dependent and you can, therefore, implement it without system downtime. ... The concept of the Subsequent\n\t\t\t\t\tImplementation of <b>Document</b> <b>Splitting</b> in <b>SAP</b> <b>S</b>/<b>4HANA</b>\ndiffers from the Migration Scenario 6 of the &ldquo;New GL&rdquo;. ... module in <b>SAP</b> <b>S</b>/<b>4HANA</b> is based on the\nconcept of the former &ldqu",
+            "score": 0.036290322580645164
+          },
+          {
+            "id": "sap-help-9e941d5c2e7c47d7a152667b2a8c1ea7",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_Ariba/a8b267a78ec046d79a3d08b82c4d4801/9e941d5c2e7c47d7a152667b2a8c1ea7.html?locale=en-US&state=PRODUCTION&version=cloud",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Artifacts in the Automation of Source-to-Pay with SAP Business Network (42K) Using SAP Integration Suite Package\n\n<b>Configuring</b> the Receive Transaction <b>Documents</b> Artifact\n\tSend Transaction <b>Documents</b>\n\t<b>Configuring</b> this integration flow template is mandatory as it used to\nsend <b>documents</b> to <b>SAP</b> <b>S</b>/<b>4HANA</b> Cloud or <b>SAP</b> <b>S</b>/<b>4HANA</b> ... Artifact\tDescription\tLink to Procedure\n\tReceive Transaction\n<b>Documents</b>\t<b>Configuring</b> this",
+            "score": 0.03571428571428571
+          }
+        ],
+        "supportContentResults": [],
+        "allResults": [
+          {
+            "id": "/abap-docs-standard/ABENSAP_S4HANA_CLOUD_GLOSRY",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENSAP_S4HANA_CLOUD_GLOSRY",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENSAP_S4HANA_CLOUD_GLOSRY\n\n*\\->*\\\\ [SAP S/4HANA Cloud Public Edition](ABENSAP_S4HANA_CPUB_GLOSRY.html) ABENTECHNO\\_GLOSSARY.html\n\n/abap-docs-standard/ABENSAP_S4HANA_CLOUD_GLOSRY",
+            "score": 0.040909090909090916
+          },
+          {
+            "id": "/abap-cheat-sheets/17_SAP_LUW#more-information",
+            "title": "Untitled",
+            "url": "/abap-cheat-sheets/17_SAP_LUW#more-information",
+            "sourceKind": "offline",
+            "sourceId": "abap-cheat-sheets",
+            "snippet": "More Information\n\n- [The RAP Transactional Model and the SAP LUW](https://help.sap.com/docs/SAP_S4HANA_CLOUD/e5522a8a7b174979913c99268bc03f1a/ccda1094b0f845e28b88f9f50a68dfc4.html) (Development guide for the ABAP RESTful Application Programming Model) - [SAP LUW in the ABAP Keyword Documentation](https://help.sap.com...\n\n/abap-cheat-sheets/17_SAP_LUW#more-information",
+            "score": 0.04047619047619047
+          },
+          {
+            "id": "/abap-docs-standard/ABENSAP_S4HANA_GLOSRY",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENSAP_S4HANA_GLOSRY",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENSAP_S4HANA_GLOSRY\n\nSAP's on-premise business suite that is based on a [ABAP Platform](ABENABAP_PLATFORM_GLOSRY.html) and runs on [SAP HANA](ABENSAP_HANA_GLOSRY.html). See also [SAP S/4HANA Cloud Public Edition](ABENSAP_S4HANA_CPUB_GLOSRY.html) and [SAP S/4HANA Cloud Private Edition](ABENSAP_S4HANA_CPRIV_GLOSRY.html). ABENTECHNO\\_GLOSSARY.html\n\n/abap-docs-standard/ABENSAP_S4HANA_GLOSRY",
+            "score": 0.04029850746268657
+          },
+          {
+            "id": "/abap-docs-standard/ABENSAP_S4HANA_CPUB_GLOSRY",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENSAP_S4HANA_CPUB_GLOSRY",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENSAP_S4HANA_CPUB_GLOSRY\n\nSAP S/4HANA Cloud for short. Cloud version of [SAP S/4HANA](ABENSAP_S4HANA_GLOSRY.html). Partner and customer developments are governed by the [ABAP Cloud](ABENABAP_CLOUD_GLOSRY.html) paradigm. For that the [SAP S/4HANA Cloud ABAP environment](ABENS4_HANA_CLOUD_ABAP_ENV_GLOSRY.html) (aka [embedded Steampunk](ABENEMBEDDED_STEAMPUNK_GLOSRY.html)) can be used. See also [SAP S/4HANA Cloud Private Edit\n\n/abap-docs-standard/ABENSAP_S4HANA_CPUB_GLOSRY",
+            "score": 0.03970588235294118
+          },
+          {
+            "id": "/abap-docs-standard/ABENSAP_S4HANA_CPRIV_GLOSRY",
+            "title": "Untitled",
+            "url": "/abap-docs-standard/ABENSAP_S4HANA_CPRIV_GLOSRY",
+            "sourceKind": "offline",
+            "sourceId": "abap-docs-standard",
+            "snippet": "ABENSAP_S4HANA_CPRIV_GLOSRY\n\nCloud version of [SAP S/4HANA](ABENSAP_S4HANA_GLOSRY.html) based on the [ABAP Platform](ABENABAP_PLATFORM_GLOSRY.html) of SAP S/4HANA. Partner and customer developments can either use the [ABAP Cloud](ABENABAP_CLOUD_GLOSRY.html) or the [classic ABAP](ABENCLASSIC_ABAP_GLOSRY.html) paradigm. For ABAP Cloud the [SAP S/4HANA Cloud ABAP environment](ABENS4_HANA_CLOUD_ABAP_ENV_GLOSRY.html) (aka [embedde\n\n/abap-docs-standard/ABENSAP_S4HANA_CPRIV_GLOSRY",
+            "score": 0.0391304347826087
+          },
+          {
+            "id": "sap-help-728efdb65e774398825a4064c443db9a",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/3cb1182b4a184bdd93f8d62e3f1f0741/728efdb65e774398825a4064c443db9a.html?locale=en-US&state=PRODUCTION&version=2025.001",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Subsequent Implementation of Document Splitting\n\nin <b>SAP</b> <b>S</b>/<b>4HANA</b> is based on the concept\nof the former &ldquo;New GL&rdquo;. ... In <b>SAP</b>\n<b>S</b>/<b>4HANA</b>, the activation of <b>document</b> <b>splitting</b> is time-dependent\nand you can, therefore, implement it without system downtime. ... Subsequent Implementation of <b>Document</b> <b>Splitting</b>\nWithin the scope of the Subsequent Implementation of <b>Document</b> <b>Splitting</b>,\n<b>SAP</b> <b>S</b>/<b>4HANA</",
+            "score": 0.036885245901639344
+          },
+          {
+            "id": "sap-help-27773e5e134645a08fcc1bc424afd0b4",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/4c6c3c99e6e94a92a626f424add61cba/27773e5e134645a08fcc1bc424afd0b4.html?locale=en-US&state=PRODUCTION&version=100",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Subsequent Implementation of Document Splitting\n\nIn <b>SAP</b>\n<b>S</b>/<b>4HANA</b>, the activation of <b>document</b> <b>splitting</b> is\ntime-dependent and you can, therefore, implement it without system downtime. ... The concept of the Subsequent\n\t\t\t\t\tImplementation of <b>Document</b> <b>Splitting</b> in <b>SAP</b> <b>S</b>/<b>4HANA</b>\ndiffers from the Migration Scenario 6 of the &ldquo;New GL&rdquo;. ... module in <b>SAP</b> <b>S</b>/<b>4HANA</b> is based on the\nconcept of the former &ldqu",
+            "score": 0.036290322580645164
+          },
+          {
+            "id": "sap-help-9e941d5c2e7c47d7a152667b2a8c1ea7",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_Ariba/a8b267a78ec046d79a3d08b82c4d4801/9e941d5c2e7c47d7a152667b2a8c1ea7.html?locale=en-US&state=PRODUCTION&version=cloud",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Artifacts in the Automation of Source-to-Pay with SAP Business Network (42K) Using SAP Integration Suite Package\n\n<b>Configuring</b> the Receive Transaction <b>Documents</b> Artifact\n\tSend Transaction <b>Documents</b>\n\t<b>Configuring</b> this integration flow template is mandatory as it used to\nsend <b>documents</b> to <b>SAP</b> <b>S</b>/<b>4HANA</b> Cloud or <b>SAP</b> <b>S</b>/<b>4HANA</b> ... Artifact\tDescription\tLink to Procedure\n\tReceive Transaction\n<b>Documents</b>\t<b>Configuring</b> this",
+            "score": 0.03571428571428571
+          },
+          {
+            "id": "sap-help-3180ef0aba494eb8abf4cf9d4c720280",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP RETURN PACK MGMT OD/21f5b5a4ec054198a34ce6fe7997c482/3180ef0aba494eb8abf4cf9d4c720280.html?locale=en-US&state=PRODUCTION&version=SHIP",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Configuring Integration Flows\n\n<b>Configuring</b> Integration Flows\n<b>Configure</b> the Material <b>Documents</b> Replication from <b>SAP</b> <b>S4HANA</b>\nintegration flow to enable communication between <b>SAP</b> RPM and <b>SAP</b> <b>S</b>/<b>4HANA</b>. ... Context\n\n\nSetting up communication between <b>SAP</b> RPM and <b>SAP</b> <b>S</b>/<b>4HANA</b> lets you fetch material <b>documents</b>\nfrom <b>SAP</b> <b>S</b>/<b>4HANA</b> and makes it available in <b>SAP</b> RPM. ... <b>Configuring</b",
+            "score": 0.03515625
+          },
+          {
+            "id": "sap-help-f98fac522ce14bd08789b3644bfda8ba",
+            "title": "Untitled",
+            "url": "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/26c2d5e366bc44c1a98f2a9212a0c49d/f98fac522ce14bd08789b3644bfda8ba.html?locale=en-US&state=PRODUCTION&version=2025.001",
+            "sourceKind": "sap_help",
+            "sourceId": "sap-help",
+            "snippet": "Document Splitting\n\nFor source systems on releases lower than <b>SAP</b> <b>S</b>/<b>4HANA</b> 1909 you must implement\n<b>SAP</b> Note 2764175  to activate this functionality. ... Central <b>document</b> <b>splitting</b>\nIn this scenario, <b>document</b> <b>splitting</b> does not need to be active in your\nsource system. Instead. you <b>configure</b> <b>document</b> <b>splitting</b> in your Central\nFinance system. ... For further details about central <b>document</b> <b>splitting</b>, please cont",
+            "score": 0.03461538461538462
+          }
+        ]
+      },
+      "prBranch": null,
+      "analysis": {
+        "officialDocsAvailable": true,
+        "supportContentAvailable": false,
+        "topDocsFromBothSources": {
+          "official": [
+            "Untitled",
+            "Untitled",
+            "Untitled"
+          ],
+          "support": []
+        }
+      }
+    }
+  ],
+  "summary": null
+}
