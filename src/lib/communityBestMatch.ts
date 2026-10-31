@@ -98,6 +98,7 @@ async function executeLiqlSearch(url: string, userAgent?: string): Promise<any[]
       Accept: "application/json",
       "User-Agent": userAgent || "sap-docs-mcp/1.0 (LiQLSearch)",
     },
+    signal: AbortSignal.timeout(CONFIG.SAP_COMMUNITY_TIMEOUT_MS),
   });
 
   if (!response.ok) {
@@ -168,8 +169,8 @@ export async function searchCommunityBestMatch(
   console.log(`[SAP Community] LiQL broad (subject+body): query="${query}" minKudos=${minKudos}`);
   const broadSearch = executeLiqlSearch(broadUrl, userAgent);
 
-  const termResults = await Promise.all(termSearches);
-  const broadItems = await broadSearch;
+  // Await together: if one search rejects (e.g. timeout), the others must not become unhandled rejections.
+  const [broadItems, ...termResults] = await Promise.all([broadSearch, ...termSearches]);
 
   for (const items of termResults) allItems.push(...items);
   allItems.push(...broadItems);
@@ -251,7 +252,8 @@ export async function getCommunityPostsByIds(postIds: string[], userAgent?: stri
       headers: {
         'Accept': 'application/json',
         'User-Agent': userAgent || 'sap-docs-mcp/1.0 (BatchRetrieval)'
-      }
+      },
+      signal: AbortSignal.timeout(CONFIG.SAP_COMMUNITY_TIMEOUT_MS)
     });
 
     if (!response.ok) {

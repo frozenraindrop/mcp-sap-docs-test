@@ -67,6 +67,15 @@ export const CONFIG = {
   DISCOVERY_CENTER_CACHE_TTL_MS: Number(process.env.DISCOVERY_CENTER_CACHE_TTL_MS || 3600000),
 
   // ---------------------------------------------------------------------------
+  // SAP Help / SAP Community outbound request timeouts
+  // ---------------------------------------------------------------------------
+
+  // Per-request timeout in milliseconds (default: 10 seconds). A stalled upstream
+  // aborts the request instead of hanging the tool call.
+  SAP_HELP_TIMEOUT_MS: Number(process.env.SAP_HELP_TIMEOUT_MS || 10000),
+  SAP_COMMUNITY_TIMEOUT_MS: Number(process.env.SAP_COMMUNITY_TIMEOUT_MS || 10000),
+
+  // ---------------------------------------------------------------------------
   // Hybrid Search (BM25 + Embeddings) Configuration
   // ---------------------------------------------------------------------------
 
