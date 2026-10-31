@@ -78,16 +78,20 @@ export function normalizeCommunityUrl(url?: string, postId?: string): string {
  * Returns topic-level messages only (depth=0) to avoid reply noise.
  */
 export function buildLiqlSearchUrl(query: string, limit = 20, subjectOnly = false, minKudos = 0): string {
-  const escaped = query.replace(/'/g, "\\'");
+  // LiQL escapes a quote by doubling it; a backslash is a plain character there.
+  const escaped = query.replace(/'/g, "''");
+  // Tool arguments are not type-checked at runtime: force integers before pasting them into the query.
+  const kudos = Math.trunc(Number(minKudos));
+  const max = Math.trunc(Number(limit)) || 20;
   const matchClause = subjectOnly
     ? `subject MATCHES '${escaped}'`
     : `(subject MATCHES '${escaped}' OR body MATCHES '${escaped}')`;
-  const kudosClause = minKudos > 0 ? ` AND kudos.sum(weight) >= ${minKudos}` : "";
+  const kudosClause = kudos > 0 ? ` AND kudos.sum(weight) >= ${kudos}` : "";
   const liql = [
     "SELECT id, subject, search_snippet, post_time, view_href, kudos.sum(weight)",
     "FROM messages",
     `WHERE ${matchClause} AND depth = 0${kudosClause}`,
-    `LIMIT ${limit}`,
+    `LIMIT ${max}`,
   ].join(" ");
   return `${LIQL_BASE}?q=${encodeURIComponent(liql)}`;
 }
