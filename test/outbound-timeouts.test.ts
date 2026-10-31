@@ -32,9 +32,20 @@ describe("outbound timeouts", () => {
     expect(Date.now() - started).toBeLessThan(2000);
   });
 
-  it("SAP Community search rejects instead of hanging", async () => {
+  it("SAP Community search rejects instead of hanging when every request stalls", async () => {
     const { searchCommunityBestMatch } = await import("../src/lib/communityBestMatch.js");
     await expect(searchCommunityBestMatch("rap draft")).rejects.toThrow();
+  });
+
+  it("SAP Community search keeps the results of the requests that succeed", async () => {
+    // The first request answers; the remaining ones stall until they time out.
+    const ok = { ok: true, json: async () => ({ status: "success", data: { items: [
+      { id: 7, subject: "RAP draft", view_href: "/t5/x/ba-p/7", post_time: "2026-01-01T00:00:00Z" },
+    ] } }) } as Response;
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(ok).mockImplementation(hangUntilAborted));
+    const { searchCommunityBestMatch } = await import("../src/lib/communityBestMatch.js");
+    const hits = await searchCommunityBestMatch("rap draft");
+    expect(hits).toHaveLength(1);
   });
 
   it("SAP Help search does not hang", async () => {
